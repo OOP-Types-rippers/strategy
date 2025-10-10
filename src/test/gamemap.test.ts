@@ -7,10 +7,10 @@ map.setTile(3, 4, "water");
 
 const tile = map.getTile(2, 2)
 if (tile.terrain !== "forest") {
-    console.error("Tile isn't forest");
+  console.error("Tile isn't forest");
 }
 if (tile.moveCost !== 2) {
-    console.error("Tile isn't moved");
+  console.error("Tile isn't moved");
 }
 
 console.log(`Tile 2, 2 is ${map.getTile(2, 2).terrain}, it's move cost is: ${map.getTile(2, 2).moveCost}, it's defence bonus is: ${map.getTile(2, 2).defenseBonus}`);

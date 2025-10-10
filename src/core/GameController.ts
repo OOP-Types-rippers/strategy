@@ -4,11 +4,11 @@ import type { IGameMap } from "../types/IGameMap";
 import type { IFaction } from "../types/IFaction";
 import type { IEntity } from "../types/IEntity";
 
-type GameState = "idle" | "selected"
+type GameState = "idle" | "selected";
 
 export class GameController {
-  public turn: number
-  public currentFaction: IFaction
+  public turn: number;
+  public currentFaction: IFaction;
 
   constructor(
     public map: IGameMap,
@@ -16,27 +16,27 @@ export class GameController {
     public units: IEntity[],
     private renderer: IRenderer,
   ) {
-    this.turn = 1
-    this.currentFaction = factions[0]
+    this.turn = 1;
+    this.currentFaction = factions[0];
   }
 
   public nextTurn() {
-    this.turn++
-    this.currentFaction = this.factions[(this.turn - 1) % this.factions.length]
+    this.turn++;
+    this.currentFaction = this.factions[(this.turn - 1) % this.factions.length];
     // on new turn logic will be placed here
-    this.render()
+    this.render();
   }
 
   private render() {
-    this.renderer.render(this.getState())
+    this.renderer.render(this.getState());
   }
 
   private getState() {
     const state: IGameState = {
       map: this.map,
       factions: this.factions,
-      currentFaction: this.currentFaction
+      currentFaction: this.currentFaction,
     }
-    return state
+    return state;
   }
 }
