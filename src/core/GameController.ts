@@ -2,7 +2,6 @@ import type { IGameState } from "../types/IGameState";
 import type { IRenderer } from "../types/IRenderer";
 import type { IGameMap } from "../types/IGameMap";
 import type { IFaction } from "../types/IFaction";
-import type { IEntity } from "../types/IEntity";
 
 type GameState = "idle" | "selected";
 
@@ -16,12 +15,12 @@ export class GameController {
     private renderer: IRenderer,
   ) {
     this.turn = 1;
-    this.currentFaction = factions[0];
+    this.currentFaction = factions[0]!;
   }
 
   public nextTurn() {
     this.turn++;
-    this.currentFaction = this.factions[(this.turn - 1) % this.factions.length];
+    this.currentFaction = this.factions[(this.turn - 1) % this.factions.length]!;
     // on new turn logic will be placed here
     this.render();
   }

@@ -5,7 +5,7 @@
   "description": "Simple strategy game similar to Ancient Empires",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node src/test/index.ts"
   },
   "repository": {
     "type": "git",
