@@ -13,7 +13,6 @@ export class GameController {
   constructor(
     public map: IGameMap,
     public factions: IFaction[],
-    public units: IEntity[],
     private renderer: IRenderer,
   ) {
     this.turn = 1;
