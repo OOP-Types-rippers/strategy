@@ -1,7 +1,7 @@
-import {TerrainType} from "./TileTerrain";
+import { TerrainType } from "./TileTerrain";
 
 export interface ITile {
-    terrain: TerrainType;
-    moveCost: number;
-    defenseBonus: number;
+  terrain: TerrainType;
+  moveCost: number;
+  defenseBonus: number;
 }
