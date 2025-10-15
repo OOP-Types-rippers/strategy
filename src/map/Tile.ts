@@ -4,12 +4,12 @@ import type { IEntity } from "../types/IEntity";
 import type { IBuilding } from "../types/IBuilding";
 
 const terrainStats = {
-  road: { moveCost: 1, defenceBonus: 0 },
-  grass: { moveCost: 1, defenceBonus: 1 },
-  hill: { moveCost: 2, defenceBonus: 1 },
-  forest: { moveCost: 2, defenceBonus: 2 },
-  mountain: { moveCost: 3, defenceBonus: 3 },
-  water: { moveCost: 3, defenceBonus: 0 },
+  road: { moveCost: 1, defenseBonus: 0 },
+  grass: { moveCost: 1, defenseBonus: 1 },
+  hill: { moveCost: 2, defenseBonus: 1 },
+  forest: { moveCost: 2, defenseBonus: 2 },
+  mountain: { moveCost: 3, defenseBonus: 3 },
+  water: { moveCost: 3, defenseBonus: 0 },
 }
 
 export class Tile implements ITile {
@@ -28,6 +28,6 @@ export class Tile implements ITile {
   }
 
   get defenseBonus(): number {
-    return terrainStats[this.terrain].defenceBonus;
+    return terrainStats[this.terrain].defenseBonus;
   }
 }

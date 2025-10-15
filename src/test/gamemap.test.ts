@@ -16,7 +16,9 @@ export function testGameMap() {
     console.error("Tile isn't moved");
   }
 
-  console.log(`Tile 2, 2 is ${map.getTile(2, 2).terrain}, it's move cost is: ${map.getTile(2, 2).moveCost}, it's defence bonus is: ${map.getTile(2, 2).defenseBonus}`);
+  console.log(`Tile 2, 2 is ${map.getTile(2, 2).terrain}, it's move cost is: ${map.getTile(2, 2).moveCost}, it's defense bonus is: ${map.getTile(2, 2).defenseBonus}`);
   map.setTile(2, 2, "hill");
-  console.log(`Now it's changed into a ${map.getTile(2, 2).terrain}, it's move cost is: ${map.getTile(2, 2).moveCost}, it's defence bonus is: ${map.getTile(2, 2).defenseBonus}`);
+  console.log(`Now it's changed into a ${map.getTile(2, 2).terrain}, it's move cost is: ${map.getTile(2, 2).moveCost}, it's defense bonus is: ${map.getTile(2, 2).defenseBonus}`);
 }
+
+testGameMap();

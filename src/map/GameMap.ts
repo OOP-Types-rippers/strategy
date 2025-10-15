@@ -25,7 +25,7 @@ export class GameMap implements IGameMap {
 
   getTile(x: number, y: number): ITile {
     if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
-      throw new Error(`Tile ${x} is not a valid tile`);
+      throw new Error(`Tile (${x}, ${y}) is not a valid tile`);
     }
     return this.grid[y]![x]!;
   }
