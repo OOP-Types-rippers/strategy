@@ -1,24 +1,27 @@
 import { GameMap } from "../map/GameMap";
 
 export function testGameMap() {
-  console.log("Testing game map: ");
+    console.log("Testing game map:\n");
+    const map = new GameMap(5, 5, "grass");
 
-  const map = new GameMap(5, 5, "grass");
-  map.setTile(2, 2, "forest");
-  map.setTile(1, 3, "hill");
-  map.setTile(3, 4, "water");
+    console.log("The map was created:");
+    map.print();
 
-  const tile = map.getTile(2, 2)
-  if (tile.terrain !== "forest") {
-    console.error("Tile isn't forest");
-  }
-  if (tile.moveCost !== 2) {
-    console.error("Tile isn't moved");
-  }
+    map.setTile(1, 1, "forest");
+    map.setTile(0, 2, "hill");
+    map.setTile(2, 3, "water");
+    console.log("Some tiles were changed:");
+    map.print();
 
-  console.log(`Tile 2, 2 is ${map.getTile(2, 2).terrain}, it's move cost is: ${map.getTile(2, 2).moveCost}, it's defense bonus is: ${map.getTile(2, 2).defenseBonus}`);
-  map.setTile(2, 2, "hill");
-  console.log(`Now it's changed into a ${map.getTile(2, 2).terrain}, it's move cost is: ${map.getTile(2, 2).moveCost}, it's defense bonus is: ${map.getTile(2, 2).defenseBonus}`);
+    console.log(`Tile 1, 3 is ${map.getTile(0, 2).terrain}, it's move cost is: ${map.getTile(0, 2).moveCost}, it's defense bonus is: ${map.getTile(0, 2).defenseBonus}`);
+    map.setTile(0, 2, "road");
+    console.log(`Now it's changed into a ${map.getTile(0, 2).terrain}, it's move cost is: ${map.getTile(0, 2).moveCost}, it's defense bonus is: ${map.getTile(0, 2).defenseBonus}`);
+    map.print();
+
+    map.setRow("grass");
+    map.setCol("water")
+    console.log("A new grass row and water col were added:")
+    map.print();
 }
 
 testGameMap();
