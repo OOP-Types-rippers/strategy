@@ -64,6 +64,22 @@ export class GameMap implements IGameMap {
         }
     }
 
+    moveEntity(fromX: number, fromY: number, toX : number, toY: number, entity: IEntity) : void {
+        const fromTile = this.getTile(fromX, fromY);
+        const toTile = this.getTile(toX, toY);
+        if (!fromTile.unit) {
+            console.error(`No entity found at ${fromX}, ${fromY} to move.`);
+            return;
+        }
+        if (toTile.unit) {
+            console.error(`Tile ${toX}, ${toY} already occupied by another entity.`);
+            return;
+        }
+
+        toTile.unit = fromTile.unit;
+        fromTile.unit = null;
+    }
+
     placeBuilding(x: number, y: number, building: IBuilding) : void {
         const tile = this.getTile(x, y);
         if (tile) {
@@ -79,7 +95,7 @@ export class GameMap implements IGameMap {
         }
     }
 
-    clearMap() : void {
+    clear() : void {
         this.grid.length = 0;
         this.width = 0;
         this.height = 0;

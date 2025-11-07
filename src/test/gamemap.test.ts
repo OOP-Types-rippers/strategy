@@ -22,6 +22,10 @@ export function testGameMap() {
     map.setCol("water")
     console.log("A new grass row and water col were added:")
     map.print();
+
+    map.clear();
+    console.log("The map was cleared.");
+    map.print();
 }
 
 testGameMap();
