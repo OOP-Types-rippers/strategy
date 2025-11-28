@@ -1,9 +1,9 @@
 import type { ITile } from "../types/ITile";
-import type { TerrainType } from "../types/TileTerrain";
+import type { TerrainStats, TerrainType } from "../types/Terrain";
 import type { IEntity } from "../types/IEntity";
 import type { IBuilding } from "../types/IBuilding";
 
-const terrainStats = {
+const terrainStats: TerrainStats = {
   road: { moveCost: 1, defenseBonus: 0 },
   grass: { moveCost: 1, defenseBonus: 1 },
   hill: { moveCost: 2, defenseBonus: 1 },

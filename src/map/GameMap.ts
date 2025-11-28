@@ -1,5 +1,5 @@
 import type { ITile } from "../types/ITile";
-import type { TerrainType } from "../types/TileTerrain"
+import type { TerrainType } from "../types/Terrain"
 import type { IGameMap } from "../types/IGameMap";
 import type { IEntity } from "../types/IEntity";
 import type { IBuilding } from "../types/IBuilding";
@@ -89,7 +89,7 @@ export class GameMap implements IGameMap {
         }
     }
 
-    print() : void {
+    print(): void {
         for (const row of this.grid) {
             console.log(row.map(t => t.terrain[0]!.toUpperCase()).join(" "));
         }

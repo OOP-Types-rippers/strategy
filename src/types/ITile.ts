@@ -1,4 +1,4 @@
-import { TerrainType } from "./TileTerrain";
+import { TerrainType } from "./Terrain";
 import { IEntity } from "./IEntity";
 import { IBuilding } from "./IBuilding";
 
