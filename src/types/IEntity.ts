@@ -7,6 +7,9 @@ export interface IEntity {
     defense: number;
     movepoints: number;
     name: string;
+    posX: number;
+    posY: number;
+    hasMoved: boolean;
     faction: IFaction | null;
 
     get Hp(): number 
@@ -19,7 +22,9 @@ export interface IEntity {
     setDefense(newDefense: number): void
     get MovePoints(): number 
     setMovePoints(newMovePoints: number): void
-
+    get PosX(): number;
+    get PosY(): number;
+    setPos(newPosX: number, newPosY: number): void
     increaseHP(bonus:number):void
     decreaseHP(bonus:number):void
     

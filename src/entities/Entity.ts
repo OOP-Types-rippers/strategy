@@ -8,6 +8,9 @@ export class Entity implements IEntity {
     defense: number;
     movepoints: number;
     name: string;
+    posX: number;
+    posY: number;
+    hasMoved: boolean;
     faction: IFaction | null;
 
     constructor() {
@@ -17,6 +20,9 @@ export class Entity implements IEntity {
         this.defense = 0;
         this.movepoints =0;
         this.name = "";
+        this.posX = -1;
+        this.posY = -1;
+        this.hasMoved = false;
         this.faction = null;
     }
 
@@ -43,6 +49,20 @@ export class Entity implements IEntity {
 
     get Attack(): number {
         return this.attack;
+    }
+
+    get PosX():number{
+        return this.posX;
+    }
+
+    get PosY():number{
+        return this.posY;
+    }
+
+    setPos(newPosX: number, newPosY: number): void{
+        this.posX = newPosX;
+        this.posY = newPosY;
+        return;
     }
 
     setAttack(newAttack: number): void {
