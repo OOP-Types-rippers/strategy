@@ -1,5 +1,5 @@
 import type { ITile } from "../types/ITile";
-import type { TerrainType } from "../types/TileTerrain"
+import type { TerrainType } from "../types/Terrain"
 import type { IGameMap } from "../types/IGameMap";
 
 import { Tile } from "./Tile";

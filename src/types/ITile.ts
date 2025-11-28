@@ -1,4 +1,4 @@
-import { TerrainType } from "./TileTerrain";
+import { TerrainType } from "./Terrain";
 
 export interface ITile {
   terrain: TerrainType;
