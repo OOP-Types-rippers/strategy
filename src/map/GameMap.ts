@@ -89,7 +89,7 @@ export class GameMap implements IGameMap {
         }
     }
 
-    print() : void {
+    print(): void {
         for (const row of this.grid) {
             console.log(row.map(t => t.terrain[0]!.toUpperCase()).join(" "));
         }

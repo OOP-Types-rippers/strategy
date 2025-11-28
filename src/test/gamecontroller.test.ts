@@ -2,6 +2,7 @@ import { ConsoleRenderer } from "../io/ConsoleRenderer";
 import { GameController } from "../core/GameController";
 import { Faction } from "../factions/Faction";
 import { GameMap } from "../map/GameMap";
+import { Entity } from "../entities/Entity";
 
 export function testGameController() {
   console.log("Testing Game Controller: ");
@@ -35,6 +36,18 @@ export function testGameController() {
   game.nextTurn()
   if (game.currentFaction !== game.factions[0]) {
     console.error(`Expected ${game.currentFaction.name} to be ${game.factions[0]}`);
+    errors++;
+  }
+
+  game.selectTile(0, 0)
+  if (game.map.getTile(0, 0) !== game.selectedTile) {
+    console.error(`Expected tile at (0, 0) to be selected`);
+    errors++;
+  }
+
+  game.unselectTile()
+  if (game.selectedTile !== null) {
+    console.error(`Expected selected tile to be null`);
     errors++;
   }
 
