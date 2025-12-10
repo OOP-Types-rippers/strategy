@@ -1,6 +1,7 @@
 import { IFaction } from "./IFaction";
 
 export interface IEntity {
+    price: number;
     hp: number;
     maxHp: number;
     attack: number;

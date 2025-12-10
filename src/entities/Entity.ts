@@ -2,6 +2,7 @@ import { IEntity } from "../types/IEntity";
 import { IFaction } from "../types/IFaction";
 
 export class Entity implements IEntity {
+    price: number;
     hp: number;
     maxHp: number;
     attack: number;
@@ -14,6 +15,7 @@ export class Entity implements IEntity {
     faction: IFaction | null;
 
     constructor() {
+        this.price = 0;
         this.hp = 0;
         this.maxHp = 0;
         this.attack = 0;
@@ -107,4 +109,64 @@ export class Entity implements IEntity {
         }
     }
 
+}
+
+export class Soldier extends Entity {
+    price = 150;
+    hp = 10.0;
+    maxHp = 10.0;
+    attack = 5;
+    defense = 1.0;
+    movepoints = 4;
+    name = "Soldier";
+}
+
+export class Archer extends Entity {
+    price = 250;
+    hp = 10.0;
+    maxHp = 10.0;
+    attack = 5;
+    defense = 1.0;
+    movepoints = 4;
+    name = "Archer";
+}
+
+export class Lizard extends Entity {
+    price = 300;
+    hp = 5.0;
+    maxHp = 5.0;
+    attack = 5;
+    defense = 1.0;
+    movepoints = 3;
+    name = "Lizard";
+}
+
+export class Wizard extends Entity {
+    price = 400;
+    hp = 10.0;
+    maxHp = 10.0;
+    attack = 4;
+    defense = 1.0;
+    movepoints = 4;
+    name = "Wizard";
+}
+
+export class Knight extends Entity {
+    price = 400;
+    hp = 10.0;
+    maxHp = 10.0;
+    attack = 6;
+    defense = 2.0;
+    movepoints = 4;
+    name = "Knight";
+}
+
+export class Golem extends Entity {
+    price = 600;
+    hp = 10.0;
+    maxHp = 10.0;
+    attack = 6;
+    defense = 4.0;
+    movepoints = 4;
+    name = "Golem";
 }

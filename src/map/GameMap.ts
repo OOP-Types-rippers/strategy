@@ -160,6 +160,13 @@ export class GameMap implements IGameMap {
         return this.getDistance(startX, startY, endX, endY);
     }
 
+    getUnit(x : number, y: number) {
+        if (!(x < 0) || !(x > this.width) || !(y < 0) || !(y > this.height) && (this.getTile(x, y).unit !== null)) {
+            return this.getTile(x, y).unit;
+        }
+        return null;
+    }
+
     print() : void {
         for (const row of this.grid) {
             console.log(row.map(t => t.terrain[0]!.toUpperCase()).join(" "));
