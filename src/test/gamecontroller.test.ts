@@ -3,16 +3,18 @@ import { GameController } from "../core/GameController";
 import { Faction } from "../factions/Faction";
 import { GameMap } from "../map/GameMap";
 import { Entity } from "../entities/Entity";
+import { FSGameSaver } from "../io/FsGameSaver";
 
 export function testGameController() {
   console.log("Testing Game Controller: ");
 
   const map = new GameMap(5, 5, "grass");
-  const factionA = new Faction("red", 0xFF0000);
-  const factionB = new Faction("blue", 0x0000FF);
+  const factionA = new Faction("red", 0xFF0000, 100);
+  const factionB = new Faction("blue", 0x0000FF, 100);
   const renderer = new ConsoleRenderer();
+  const saver = new FSGameSaver();
 
-  const game = new GameController(map, [factionA, factionB], renderer);
+  const game = new GameController(map, [factionA, factionB], renderer, saver);
 
   let errors = 0;
 
@@ -50,6 +52,35 @@ export function testGameController() {
     console.error(`Expected selected tile to be null`);
     errors++;
   }
+
+  // state test
+  game.map.setTile(0, 0, "water");
+  const entity = new Entity();
+  const name = "John Doe";
+  entity.name = name;
+  game.map.placeEntity(0, 0, entity);
+  game.saveState();
+
+  game.map.getTile(0, 0).unit = null;
+  game.map.setTile(0, 0, "mountain");
+  game.saveState();
+
+  const saveName = "test-save-0";
+  game.saveGame(saveName);
+  
+  game.prev();
+  if (game.map.getTile(0, 0).unit?.name !== name) {
+    console.error(`Expected unit named ${name} at (0, 0)`);
+    errors++;
+  }
+
+  game.loadGame(saveName)
+  if (game.map.getTile(0, 0).terrain !== "mountain") {
+    console.error(`Expected mountain terrain at (0, 0) after save`);
+    errors++
+  }
+
+  game.deleteSave(saveName);
 
   if (!errors) {
     console.log("Testing ended successfully");
