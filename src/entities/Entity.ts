@@ -1,6 +1,17 @@
 import { IEntity } from "../types/IEntity";
 import { IFaction } from "../types/IFaction";
 
+type TerrainType = "road" | "grass" | "hill" | "forest" | "mountain" | "water";
+
+export interface ITerrainSingleStat {
+    moveCost: number;
+    defenseBonus: number;
+}
+export type TerrainStats = Record<TerrainType, ITerrainSingleStat>;
+export type UnitTerrainStats = Partial<
+    Record<TerrainType, Partial<ITerrainSingleStat>>
+>;
+
 export class Entity implements IEntity {
     price: number;
     hp: number;
@@ -13,6 +24,7 @@ export class Entity implements IEntity {
     posY: number;
     hasMoved: boolean;
     faction: IFaction | null;
+    unitTerrainStats: UnitTerrainStats;
 
     constructor() {
         this.price = 0;
@@ -25,7 +37,8 @@ export class Entity implements IEntity {
         this.posX = -1;
         this.posY = -1;
         this.hasMoved = false;
-        this.faction = null;
+        this.faction = null; 
+        this.unitTerrainStats = {}; // за замовчуванням юніт нічого не змінює
     }
 
     get Hp(): number {
@@ -109,6 +122,17 @@ export class Entity implements IEntity {
         }
     }
 
+    takeDamage(unit:Entity){
+        //formula
+        }  
+     
+    toAttack(unit:IEntity){
+        unit.takeDamage(this);
+        }
+
+    get UTS():UnitTerrainStats{
+        return this.unitTerrainStats;
+    }
 }
 
 export class Soldier extends Entity {
