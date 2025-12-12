@@ -1,5 +1,14 @@
 import { IFaction } from "./IFaction";
 
+import { TerrainType } from "../types/TileTerrain";
+export interface ITerrainSingleStat {
+    moveCost: number;
+    defenseBonus: number;
+}
+export type TerrainStats = Record<TerrainType, ITerrainSingleStat>;
+export type UnitTerrainStats = Partial<
+    Record<TerrainType, Partial<ITerrainSingleStat>>
+>;
 export interface IEntity {
     price: number;
     hp: number;
@@ -10,8 +19,11 @@ export interface IEntity {
     name: string;
     posX: number;
     posY: number;
-    hasMoved: boolean;
     faction: IFaction | null;
+    unitTerrainStats: UnitTerrainStats
+    hasMoved:boolean;
+    canAttack:boolean;
+    
 
     get Hp(): number 
     setHp(newHp: number): void 
@@ -28,6 +40,7 @@ export interface IEntity {
     setPos(newPosX: number, newPosY: number): void
     increaseHP(bonus:number):void
     decreaseHP(bonus:number):void
-    
+    toAttack(unit:IEntity):void
+    takeDamage(unit:IEntity):void
 }
 

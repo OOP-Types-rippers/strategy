@@ -1,7 +1,6 @@
 import { IEntity } from "../types/IEntity";
 import { IFaction } from "../types/IFaction";
-
-type TerrainType = "road" | "grass" | "hill" | "forest" | "mountain" | "water";
+import { TerrainType } from "../types/TileTerrain";
 
 export interface ITerrainSingleStat {
     moveCost: number;
@@ -22,9 +21,10 @@ export class Entity implements IEntity {
     name: string;
     posX: number;
     posY: number;
-    hasMoved: boolean;
     faction: IFaction | null;
     unitTerrainStats: UnitTerrainStats;
+    canAttack:boolean;
+    hasMoved: boolean;
 
     constructor() {
         this.price = 0;
@@ -37,6 +37,7 @@ export class Entity implements IEntity {
         this.posX = -1;
         this.posY = -1;
         this.hasMoved = false;
+        this.canAttack = false;
         this.faction = null; 
         this.unitTerrainStats = {}; // за замовчуванням юніт нічого не змінює
     }
@@ -123,10 +124,12 @@ export class Entity implements IEntity {
     }
 
     takeDamage(unit:Entity){
-        //formula
+        let baseDamage = unit.Attack - this.Defense;
+        let damage = baseDamage * unit.Hp/unit.MaxHp;
+        this.decreaseHP(damage);
         }  
      
-    toAttack(unit:IEntity){
+    toAttack(unit:Entity){
         unit.takeDamage(this);
         }
 
@@ -143,6 +146,7 @@ export class Soldier extends Entity {
     defense = 1.0;
     movepoints = 4;
     name = "Soldier";
+
 }
 
 export class Archer extends Entity {
@@ -163,6 +167,8 @@ export class Lizard extends Entity {
     defense = 1.0;
     movepoints = 3;
     name = "Lizard";
+    unitTerrainStats = {water:{moveCost: 0.5, defenseBonus: 2}};
+
 }
 
 export class Wizard extends Entity {
@@ -193,4 +199,5 @@ export class Golem extends Entity {
     defense = 4.0;
     movepoints = 4;
     name = "Golem";
+
 }
