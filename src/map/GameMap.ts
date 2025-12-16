@@ -2,27 +2,25 @@ import type { ITile } from "../types/ITile";
 import type { TerrainType } from "../types/TileTerrain"
 import type { IGameMap } from "../types/IGameMap";
 import type { IEntity } from "../types/IEntity";
-import type { Entity } from "../entities/Entity";
 import type { IBuilding } from "../types/IBuilding";
 import { Tile } from "./Tile";
+import { Seed } from "./Seed";
 
 export class GameMap implements IGameMap {
+    seed: Seed;
     width: number;
     height: number;
     grid: ITile[][];
 
-    constructor(width: number, height: number, defaultTerrain: TerrainType = 'grass') {
+    constructor(width: number, height: number, grid: ITile[][], seed ?: number) {
         this.width = width;
         this.height = height;
-        this.grid = [];
+        this.grid = grid;
+        this.seed = new Seed(seed);
+    }
 
-        for (let y = 0; y < height; y++) {
-            const row: ITile[] = [];
-            for (let x = 0; x < width; x++) {
-                row.push(new Tile(defaultTerrain));
-            }
-            this.grid.push(row);
-        }
+    getSeed(): number {
+        return this.seed.getSeed();
     }
 
     getTile(x: number, y: number): ITile {
@@ -63,13 +61,15 @@ export class GameMap implements IGameMap {
         } else {
             console.error(`Unable to place entity: ${entity}`);
         }
+        entity.setPos(x, y);
     }
 
-    moveEntity(fromX: number, fromY: number, toX : number, toY: number) : void {
-        const fromTile = this.getTile(fromX, fromY);
+    moveEntity(Entity: IEntity, toX : number, toY: number) : void {
+        const fromTile = this.getTile(Entity.posX, Entity.posY);
         const toTile = this.getTile(toX, toY);
+
         if (!fromTile.unit) {
-            console.error(`No entity found at ${fromX}, ${fromY} to move.`);
+            console.error(`No entity found at ${Entity.posX}, ${Entity.posY} to move.`);
             return;
         }
         if (toTile.unit) {
@@ -79,6 +79,9 @@ export class GameMap implements IGameMap {
 
         toTile.unit = fromTile.unit;
         fromTile.unit = null;
+
+        Entity.posX = toX;
+        Entity.posY = toY;
     }
 
     placeBuilding(x: number, y: number, building: IBuilding) : void {
@@ -144,7 +147,7 @@ export class GameMap implements IGameMap {
 
     }
 
-    getDistanceUnitTile(fromEntity: Entity, endX : number, endY : number) : number {
+    getDistanceUnitTile(fromEntity: IEntity, endX : number, endY : number) : number {
         const startX: number = fromEntity.PosX;
         const startY: number = fromEntity.PosY;
 
