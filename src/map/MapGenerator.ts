@@ -48,8 +48,4 @@ export class MapGenerator {
     getMap() : GameMap {
         return this.gameMap;
     }
-
-    getSeed() : number {
-        return this.seed;
-    }
 }
