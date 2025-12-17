@@ -1,3 +1,7 @@
-export interface IBuilding {
+export interface IBuildingState {
 
+}
+
+export interface IBuilding {
+  
 }

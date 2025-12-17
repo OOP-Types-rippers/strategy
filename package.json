@@ -5,13 +5,20 @@
   "description": "Simple strategy game similar to Ancient Empires",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node src/test/index.ts"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/OOP-Types-rippers/strategy.git"
   },
-  "keywords": ["oop", "strategy"],
+  "keywords": [
+    "oop",
+    "strategy"
+  ],
   "author": "Typesсrippers",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
 }
