@@ -1,6 +1,8 @@
 import { IEntity } from "../types/IEntity";
+
 import { IFaction } from "../types/IFaction";
-import { TerrainType } from "../types/TileTerrain";
+import { TerrainType } from "../types/Terrain";
+import { IRestoreContext } from "../types/IRestoreContext";
 
 export interface ITerrainSingleStat {
     moveCost: number;
@@ -24,7 +26,7 @@ export class Entity implements IEntity {
     faction: IFaction | null;
     unitTerrainStats: UnitTerrainStats;
     canAttack:boolean;
-    hasMoved: boolean;
+    canMove: boolean;
 
     constructor() {
         this.price = 0;
@@ -36,106 +38,126 @@ export class Entity implements IEntity {
         this.name = "";
         this.posX = -1;
         this.posY = -1;
-        this.hasMoved = false;
+        this.canMove = true;
         this.canAttack = false;
         this.faction = null; 
         this.unitTerrainStats = {}; // за замовчуванням юніт нічого не змінює
     }
 
-    get Hp(): number {
-        return this.hp;
-    }
+  get Hp(): number {
+    return this.hp;
+  }
 
-    setHp(newHp: number): void {
-        this.hp = newHp;
-        if(this.hp>this.maxHp) this.hp = this.maxHp;
-        else if(this.hp<0) this.hp =0;
-        return;
-    }
+  setHp(newHp: number): void {
+    this.hp = newHp;
+    if (this.hp > this.maxHp) this.hp = this.maxHp;
+    else if (this.hp < 0) this.hp = 0;
+    return;
+  }
 
-    get MaxHp(): number {
-        return this.maxHp;
-    }
+  get MaxHp(): number {
+    return this.maxHp;
+  }
 
-    setMaxHp(newMaxHp: number): void {
-        this.maxHp = newMaxHp;
-        if(this.maxHp<0) this.maxHp = 0;
-        return;
-    }
+  setMaxHp(newMaxHp: number): void {
+    this.maxHp = newMaxHp;
+    if (this.maxHp < 0) this.maxHp = 0;
+    return;
+  }
 
-    get Attack(): number {
-        return this.attack;
-    }
+  get Attack(): number {
+    return this.attack;
+  }
 
-    get PosX():number{
-        return this.posX;
-    }
+  setAttack(newAttack: number): void {
+    this.attack = newAttack;
+    if (this.attack < 0) this.attack = 0;
+    return;
+  }
 
-    get PosY():number{
-        return this.posY;
-    }
+  get Defense(): number {
+    return this.defense;
+  }
 
-    setPos(newPosX: number, newPosY: number): void{
-        this.posX = newPosX;
-        this.posY = newPosY;
-        return;
-    }
+  setDefense(newDefense: number): void {
+    this.defense = newDefense;
+    if (this.defense < 0) this.defense < 0
+    return;
+  }
 
-    setAttack(newAttack: number): void {
-        this.attack = newAttack;
-        if(this.attack<0) this.attack =0; 
-        return;
-    }
+  get MovePoints(): number {
+    return this.movepoints;
+  }
 
-    get Defense(): number {
-        return this.defense;
-    }
+  setMovePoints(newMovePoints: number): void {
+    this.movepoints = newMovePoints;
+    if (this.movepoints < 0) this.movepoints = 0;
+    return;
+  }
+  get PosX(){
+    return this.posX;
+  }
+  get PosY(){
+    return this.posY;
+  }
+  setPos(newPosX: number, newPosY: number){
 
-    setDefense(newDefense: number): void {
-        this.defense = newDefense;
-        if(this.defense < 0) this.defense <0
-        return;
-    }
+  }
 
-    get MovePoints(): number {
-        return this.movepoints;
-    }
 
-    setMovePoints(newMovePoints: number): void {
-        this.movepoints = newMovePoints;
-        if(this.movepoints < 0) this.movepoints = 0;
-        return;
-    }
+  increaseHP(bonus: number): void {
+    if (this.hp + bonus >= this.maxHp) this.hp = this.maxHp
+    else {
+      this.hp += bonus;
+      this.hp = Math.floor(this.hp * 10) / 10;    //Rounding down to 1 decimal place
 
-    increaseHP(bonus:number):void{
-        if(this.hp +bonus >= this.maxHp) this.hp = this.maxHp
-        else {
-            this.hp += bonus;
-            this.hp = Math.floor(this.hp*10)/10;    //Rounding down to 1 decimal place
-        }
     }
+  }
 
-    decreaseHP(bonus:number):void{
-        if(this.hp - bonus <=0) this.hp = 0;
-        else{ 
-            this.hp -= bonus;
-            this.hp = Math.ceil(this.hp*10)/10 ;    //Rounding up to 1 decimal place
-        }
+  decreaseHP(bonus: number): void {
+    if (this.hp - bonus <= 0) this.hp = 0;
+    else {
+      this.hp -= bonus;
+      this.hp = Math.ceil(this.hp * 10) / 10;    //Rounding up to 1 decimal place
     }
+  }
 
-    takeDamage(unit:Entity){
+    takeDamage(unit:IEntity){
         let baseDamage = unit.Attack - this.Defense;
         let damage = baseDamage * unit.Hp/unit.MaxHp;
         this.decreaseHP(damage);
         }  
      
-    toAttack(unit:Entity){
+    toAttack(unit:IEntity){
         unit.takeDamage(this);
         }
 
     get UTS():UnitTerrainStats{
         return this.unitTerrainStats;
     }
+    restoreFromState(entityState: IEntityState, context: IRestoreContext) {
+    this.hp = entityState.hp;
+    this.maxHp = entityState.maxHp;
+    this.defense = entityState.defense;
+    this.attack = entityState.attack;
+    this.movepoints = entityState.movepoints;
+    this.canMove = entityState.canMove;
+    this.name = entityState.name;
+    this.faction = context.factions.find(f => f.name === entityState.faction) ?? null;
+  }
+  getState(): IEntityState {
+    return {
+      hp: this.hp,
+      maxHp: this.maxHp,
+      defense: this.defense,
+      attack: this.attack,
+      movepoints: this.movepoints,
+      canMove: this.canMove,
+      name: this.name,
+      faction: this.faction?.name ?? null,
+    }
+  }
+
 }
 
 export class Soldier extends Entity {

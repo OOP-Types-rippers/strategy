@@ -1,10 +1,10 @@
 import { IFaction } from "./IFaction";
-
-import { TerrainType } from "../types/TileTerrain";
+import { TerrainType } from "./Terrain";
 export interface ITerrainSingleStat {
     moveCost: number;
     defenseBonus: number;
 }
+import { IRestoreContext } from "../types/IRestoreContext";
 export type TerrainStats = Record<TerrainType, ITerrainSingleStat>;
 export type UnitTerrainStats = Partial<
     Record<TerrainType, Partial<ITerrainSingleStat>>
@@ -20,8 +20,8 @@ export interface IEntity {
     posX: number;
     posY: number;
     faction: IFaction | null;
-    unitTerrainStats: UnitTerrainStats
-    hasMoved:boolean;
+    unitTerrainStats: UnitTerrainStats;
+    canMove:boolean;
     canAttack:boolean;
     
 
@@ -42,5 +42,7 @@ export interface IEntity {
     decreaseHP(bonus:number):void
     toAttack(unit:IEntity):void
     takeDamage(unit:IEntity):void
+    restoreFromState(entityState: IEntityState, context: IRestoreContext):void
+    getState(): IEntityState 
 }
 
