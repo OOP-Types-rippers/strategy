@@ -3,7 +3,7 @@ import { GameController } from "../core/GameController";
 import { Faction } from "../factions/Faction";
 import { GameMap } from "../map/GameMap";
 import { Entity } from "../entities/Entity";
-import { FSGameSaver } from "../io/FsGameSaver";
+import { FSGameSaver } from "../io/FSGameSaver";
 
 export function testGameController() {
   console.log("Testing Game Controller: ");
