@@ -4,7 +4,7 @@ import { Faction } from "../factions/Faction";
 export function testEntity() {
   console.log("Testing Entity: ");
 
-  const faction = new Faction("red", 0x00FF00);
+  const faction = new Faction("red", 0x00FF00, 100);
   const entity = new Entity();
 
   let errors = 0;

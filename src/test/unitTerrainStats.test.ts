@@ -1,5 +1,4 @@
 import { Entity } from "../entities/Entity";
-import { UnitTerrainStats } from "../entities/Entity"; // або звідки експортується тип
 
 export function testUnitTerrainStatsGetter() {
   console.log("Testing UnitTerrainStats getter:");

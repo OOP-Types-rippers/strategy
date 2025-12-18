@@ -1,48 +1,38 @@
-import { IEntity } from "../types/IEntity";
+import { IEntity, IEntityState, ITerrainSingleStat, UnitTerrainStats } from "../types/IEntity";
 
 import { IFaction } from "../types/IFaction";
-import { TerrainType } from "../types/Terrain";
 import { IRestoreContext } from "../types/IRestoreContext";
 
-export interface ITerrainSingleStat {
-    moveCost: number;
-    defenseBonus: number;
-}
-export type TerrainStats = Record<TerrainType, ITerrainSingleStat>;
-export type UnitTerrainStats = Partial<
-    Record<TerrainType, Partial<ITerrainSingleStat>>
->;
-
 export class Entity implements IEntity {
-    price: number;
-    hp: number;
-    maxHp: number;
-    attack: number;
-    defense: number;
-    movepoints: number;
-    name: string;
-    posX: number;
-    posY: number;
-    faction: IFaction | null;
-    unitTerrainStats: UnitTerrainStats;
-    canAttack:boolean;
-    canMove: boolean;
+  price: number;
+  hp: number;
+  maxHp: number;
+  attack: number;
+  defense: number;
+  movepoints: number;
+  name: string;
+  posX: number;
+  posY: number;
+  faction: IFaction | null;
+  unitTerrainStats: UnitTerrainStats;
+  canAttack: boolean;
+  canMove: boolean;
 
-    constructor() {
-        this.price = 0;
-        this.hp = 0;
-        this.maxHp = 0;
-        this.attack = 0;
-        this.defense = 0;
-        this.movepoints =0;
-        this.name = "";
-        this.posX = -1;
-        this.posY = -1;
-        this.canMove = true;
-        this.canAttack = false;
-        this.faction = null; 
-        this.unitTerrainStats = {}; // за замовчуванням юніт нічого не змінює
-    }
+  constructor() {
+    this.price = 0;
+    this.hp = 0;
+    this.maxHp = 0;
+    this.attack = 0;
+    this.defense = 0;
+    this.movepoints = 0;
+    this.name = "";
+    this.posX = -1;
+    this.posY = -1;
+    this.canMove = true;
+    this.canAttack = false;
+    this.faction = null;
+    this.unitTerrainStats = {}; // за замовчуванням юніт нічого не змінює
+  }
 
   get Hp(): number {
     return this.hp;
@@ -94,13 +84,13 @@ export class Entity implements IEntity {
     if (this.movepoints < 0) this.movepoints = 0;
     return;
   }
-  get PosX(){
+  get PosX() {
     return this.posX;
   }
-  get PosY(){
+  get PosY() {
     return this.posY;
   }
-  setPos(newPosX: number, newPosY: number){
+  setPos(newPosX: number, newPosY: number) {
 
   }
 
@@ -122,104 +112,107 @@ export class Entity implements IEntity {
     }
   }
 
-    takeDamage(unit:IEntity){
-        let baseDamage = unit.Attack - this.Defense;
-        let damage = baseDamage * unit.Hp/unit.MaxHp;
-        this.decreaseHP(damage);
-        }  
-     
-    toAttack(unit:IEntity){
-        unit.takeDamage(this);
-        }
+  takeDamage(unit: IEntity) {
+    let baseDamage = unit.Attack - this.Defense;
+    let damage = baseDamage * unit.Hp / unit.MaxHp;
+    this.decreaseHP(damage);
+  }
 
-    get UTS():UnitTerrainStats{
-        return this.unitTerrainStats;
-    }
-    restoreFromState(entityState: IEntityState, context: IRestoreContext) {
+  toAttack(unit: IEntity) {
+    unit.takeDamage(this);
+  }
+
+  get UTS(): UnitTerrainStats {
+    return this.unitTerrainStats;
+  }
+  restoreFromState(entityState: IEntityState, context: IRestoreContext) {
+    this.name = entityState.name;
+    this.price = entityState.price;
     this.hp = entityState.hp;
     this.maxHp = entityState.maxHp;
     this.defense = entityState.defense;
     this.attack = entityState.attack;
     this.movepoints = entityState.movepoints;
     this.canMove = entityState.canMove;
-    this.name = entityState.name;
+    this.canAttack = entityState.canAttack;
     this.faction = context.factions.find(f => f.name === entityState.faction) ?? null;
+    this.unitTerrainStats = entityState.unitTerrainStats
   }
   getState(): IEntityState {
     return {
+      name: this.name,
+      price: this.price,
       hp: this.hp,
       maxHp: this.maxHp,
       defense: this.defense,
       attack: this.attack,
       movepoints: this.movepoints,
       canMove: this.canMove,
-      name: this.name,
+      canAttack: this.canAttack,
       faction: this.faction?.name ?? null,
+      unitTerrainStats: this.unitTerrainStats,
     }
   }
 
 }
 
 export class Soldier extends Entity {
-    price = 150;
-    hp = 10.0;
-    maxHp = 10.0;
-    attack = 5;
-    defense = 1.0;
-    movepoints = 4;
-    name = "Soldier";
-
+  price = 150;
+  hp = 10.0;
+  maxHp = 10.0;
+  attack = 5;
+  defense = 1.0;
+  movepoints = 4;
+  name = "Soldier";
 }
 
 export class Archer extends Entity {
-    price = 250;
-    hp = 10.0;
-    maxHp = 10.0;
-    attack = 5;
-    defense = 1.0;
-    movepoints = 4;
-    name = "Archer";
+  price = 250;
+  hp = 10.0;
+  maxHp = 10.0;
+  attack = 5;
+  defense = 1.0;
+  movepoints = 4;
+  name = "Archer";
 }
 
 export class Lizard extends Entity {
-    price = 300;
-    hp = 5.0;
-    maxHp = 5.0;
-    attack = 5;
-    defense = 1.0;
-    movepoints = 3;
-    name = "Lizard";
-    unitTerrainStats = {water:{moveCost: 0.5, defenseBonus: 2}};
-
+  price = 300;
+  hp = 5.0;
+  maxHp = 5.0;
+  attack = 5;
+  defense = 1.0;
+  movepoints = 3;
+  name = "Lizard";
+  unitTerrainStats = { water: { moveCost: 0.5, defenseBonus: 2 } };
 }
 
 export class Wizard extends Entity {
-    price = 400;
-    hp = 10.0;
-    maxHp = 10.0;
-    attack = 4;
-    defense = 1.0;
-    movepoints = 4;
-    name = "Wizard";
+  price = 400;
+  hp = 10.0;
+  maxHp = 10.0;
+  attack = 4;
+  defense = 1.0;
+  movepoints = 4;
+  name = "Wizard";
 }
 
 export class Knight extends Entity {
-    price = 400;
-    hp = 10.0;
-    maxHp = 10.0;
-    attack = 6;
-    defense = 2.0;
-    movepoints = 4;
-    name = "Knight";
+  price = 400;
+  hp = 10.0;
+  maxHp = 10.0;
+  attack = 6;
+  defense = 2.0;
+  movepoints = 4;
+  name = "Knight";
 }
 
 export class Golem extends Entity {
-    price = 600;
-    hp = 10.0;
-    maxHp = 10.0;
-    attack = 6;
-    defense = 4.0;
-    movepoints = 4;
-    name = "Golem";
-
+  price = 600;
+  hp = 10.0;
+  maxHp = 10.0;
+  attack = 6;
+  defense = 4.0;
+  movepoints = 4;
+  name = "Golem";
 }
