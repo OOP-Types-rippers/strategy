@@ -56,6 +56,7 @@ export interface IEntity {
   decreaseHP(bonus: number): void
   toAttack(unit: IEntity): void
   takeDamage(unit: IEntity): void
+  onTurn(): void
   restoreFromState(entityState: IEntityState, context: IRestoreContext): void
   getState(): IEntityState
 }

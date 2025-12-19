@@ -1,17 +1,27 @@
-import { ConsoleRenderer } from "../io/ConsoleRenderer";
 import { GameController } from "../core/GameController";
 import { Faction } from "../factions/Faction";
 import { GameMap } from "../map/GameMap";
-import { Entity } from "../entities/Entity";
+import { Entity, Knight } from "../entities/Entity";
 import { FSGameSaver } from "../io/FSGameSaver";
+import { TestRenderer } from "../io/TestRenderer";
 
-export function testGameController() {
+export async function testGameController() {
   console.log("Testing Game Controller: ");
 
   const map = new GameMap(5, 5, "grass");
+
   const factionA = new Faction("red", 0xFF0000, 100);
+  const unitA = new Knight();
+  unitA.faction = factionA;
+  map.placeEntity(4, 4, unitA);
+
   const factionB = new Faction("blue", 0x0000FF, 100);
-  const renderer = new ConsoleRenderer();
+  const unitB = new Knight();
+  unitB.faction = factionB;
+  map.placeEntity(3, 4, unitB);
+
+
+  const renderer = new TestRenderer();
   const saver = new FSGameSaver();
 
   const game = new GameController(map, [factionA, factionB], renderer, saver);
@@ -26,7 +36,7 @@ export function testGameController() {
     console.error(`Expected ${game.currentFaction.name} to be ${game.factions[0]}`);
     errors++;
   }
-  game.nextTurn();
+  await game.nextTurn();
   if (game.turn !== 2) {
     console.error(`Expected ${game.turn} to be 2`);
     errors++;
@@ -35,7 +45,7 @@ export function testGameController() {
     console.error(`Expected ${game.currentFaction.name} to be ${game.factions[1]}`);
     errors++;
   }
-  game.nextTurn()
+  await game.nextTurn();
   if (game.currentFaction !== game.factions[0]) {
     console.error(`Expected ${game.currentFaction.name} to be ${game.factions[0]}`);
     errors++;

@@ -8,7 +8,7 @@ import type { IBuilding } from "../types/IBuilding";
 import { Tile } from "./Tile";
 import { IRestoreContext } from "../types/IRestoreContext";
 
-export class GameMap implements IGameMap {
+export class GameMap {
   width: number;
   height: number;
   grid: ITile[][];
@@ -62,6 +62,7 @@ export class GameMap implements IGameMap {
     const tile = this.getTile(x, y);
     if (tile) {
       tile.unit = entity;
+      entity.setPos(x, y);
     } else {
       console.error(`Unable to place entity: ${entity}`);
     }
@@ -79,8 +80,18 @@ export class GameMap implements IGameMap {
       return;
     }
 
-    toTile.unit = fromTile.unit;
+    const unit = fromTile.unit;
+    
     fromTile.unit = null;
+    toTile.unit = unit;
+    unit.setPos(toX, toY);
+  }
+
+  removeEntity(x: number, y: number) {
+    const tile = this.getTile(x, y);
+    if (tile) {
+      tile.unit = null;
+    }
   }
 
   placeBuilding(x: number, y: number, building: IBuilding): void {
