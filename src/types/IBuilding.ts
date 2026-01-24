@@ -16,4 +16,8 @@ export interface IBuilding {
   isActive: boolean;
   activate(): void;
   info(): string;
+  getState(): IBuildingState;
+  restoreFromState(state: IBuildingState, context: IRestoreContext): void;
+  getUpgradeCost(): number;
+  canUpgrade(): boolean;
 }
