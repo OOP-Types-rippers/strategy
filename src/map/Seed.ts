@@ -25,7 +25,7 @@ export class Seed {
     }
 
     getSeed() : number {
-        if (this.lastSeed === null) {
+        if (this.lastSeed == null) {
             return this.generate();
         }
         return this.lastSeed;

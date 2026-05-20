@@ -4,200 +4,234 @@ import type { Entity } from "../entities/Entity";
 import type { TerrainType } from "../types/Terrain"
 import type { IGameMap, IGameMapState } from "../types/IGameMap";
 import type { IBuilding } from "../types/IBuilding";
-
+import { Seed } from "./Seed";
 import { Tile } from "./Tile";
 import { IRestoreContext } from "../types/IRestoreContext";
+import { NoiseFunction } from "./NoiseFunction";
 
 export class GameMap implements IGameMap {
-  width: number;
-  height: number;
-  grid: ITile[][];
+    seed: Seed;
+    width: number;
+    height: number;
+    grid: ITile[][];
+    private noise: NoiseFunction | null = null;
 
-  constructor(width: number, height: number, defaultTerrain: TerrainType = 'grass') {
-    this.width = width;
-    this.height = height;
-    this.grid = [];
+    constructor(width: number, height: number, defaultTerrain: TerrainType = 'grass', seed?: number) {
+        this.width = width;
+        this.height = height;
+        this.seed = new Seed(seed);
 
-    for (let y = 0; y < height; y++) {
-      const row: ITile[] = [];
-      for (let x = 0; x < width; x++) {
-        row.push(new Tile(defaultTerrain));
-      }
-      this.grid.push(row);
-    }
-  }
-
-  getTile(x: number, y: number): ITile {
-    if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
-      throw new Error(`Tile (${x}, ${y}) is not a valid tile`);
-    }
-    return this.grid[y]![x]!;
-  }
-
-  setTile(x: number, y: number, terrain: TerrainType): void {
-    const tile = this.getTile(x, y);
-    if (tile) {
-      tile.terrain = terrain;
-    }
-  }
-
-  setRow(defaultTerrain: TerrainType): void {
-    const newRow: ITile[] = [];
-    for (let x = 0; x < this.width; x++) {
-      newRow.push(new Tile(defaultTerrain));
-    }
-    this.grid.push(newRow);
-    this.height++;
-  }
-
-  setCol(defaultTerrain: TerrainType): void {
-    for (let y = 0; y < this.height; y++) {
-      const newTile = new Tile(defaultTerrain);
-      this.grid[y]!.push(newTile);
-    }
-    this.width++;
-  }
-
-  placeEntity(x: number, y: number, entity: IEntity): void {
-    const tile = this.getTile(x, y);
-    if (tile) {
-      tile.unit = entity;
-    } else {
-      console.error(`Unable to place entity: ${entity}`);
-    }
-  }
-
-  moveEntity(fromX: number, fromY: number, toX: number, toY: number): void {
-    const fromTile = this.getTile(fromX, fromY);
-    const toTile = this.getTile(toX, toY);
-    if (!fromTile.unit) {
-      console.error(`No entity found at ${fromX}, ${fromY} to move.`);
-      return;
-    }
-    if (toTile.unit) {
-      console.error(`Tile ${toX}, ${toY} already occupied by another entity.`);
-      return;
+        this.grid = Array.from({ length: height }, () =>
+            Array.from({ length: width }, () => new Tile(defaultTerrain))
+        );
     }
 
-    toTile.unit = fromTile.unit;
-    fromTile.unit = null;
-  }
+    public buildMap(): void {
+        this.noise = new NoiseFunction(this.seed.getSeed());
 
-  placeBuilding(x: number, y: number, building: IBuilding): void {
-    const tile = this.getTile(x, y);
-    if (tile) {
-      tile.building = building;
-    } else {
-      console.error(`Unable to place entity: ${building}`);
-    }
-  }
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                const noiseValue = this.noise.noise2D(x / 10, y / 10);
 
-  getDistance(startX: number, startY: number, endX: number, endY: number): number {
-    if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX >= this.width || startY >= this.height || endX >= this.width || endY >= this.height) {
-      return -1;
-    }
+                let terrain: TerrainType;
+                if (noiseValue < -0.5) {
+                    terrain = 'water';
+                } else if (noiseValue < -0.2) {
+                    terrain = 'road';
+                } else if (noiseValue < 0.0) {
+                    terrain = 'grass';
+                } else if (noiseValue < 0.3) {
+                    terrain = 'forest';
+                } else if (noiseValue < 0.6) {
+                    terrain = 'mountain';
+                } else {
+                    terrain = 'hill';
+                }
 
-    if (startX == endX && startY == endY) {
-      return 0;
-    }
-
-    const isVisited: boolean[][] = [];
-
-    for (let y = 0; y < this.height; y++) {
-      isVisited[y] = []
-      for (let x = 0; x < this.width; x++) {
-        isVisited[y]![x] = false;
-      }
+                this.setTile(x, y, terrain);
+            }
+        }
     }
 
-    const queue: { x: number; y: number; dist: number }[] = [];
-    queue.push({ x: startX, y: startY, dist: 0 });
+    getSeed(): number {
+        return this.seed.getSeed();
+    }
 
-    isVisited[startY]![startX] = true;
+    getTile(x: number, y: number): ITile {
+        if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+            throw new Error(`Tile (${x}, ${y}) is not a valid tile`);
+        }
+        return this.grid[y]![x]!;
+    }
 
-    const directions = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
+    setTile(x: number, y: number, terrain: TerrainType): void {
+        const tile = this.getTile(x, y);
+        if (tile) {
+            tile.terrain = terrain;
+        }
+    }
 
-    while (queue.length > 0) {
-      const { x, y, dist } = queue.shift()!;
+    setRow(defaultTerrain: TerrainType): void {
+        const newRow: ITile[] = [];
+        for (let x = 0; x < this.width; x++) {
+            newRow.push(new Tile(defaultTerrain));
+        }
+        this.grid.push(newRow);
+        this.height++;
+    }
 
-      for (const dir of directions) {
-        const nx = x + dir.dx;
-        const ny = y + dir.dy;
+    setCol(defaultTerrain: TerrainType): void {
+        for (let y = 0; y < this.height; y++) {
+            const newTile = new Tile(defaultTerrain);
+            this.grid[y]!.push(newTile);
+        }
+        this.width++;
+    }
 
-        if (nx < 0 || ny < 0 || nx >= this.width || ny >= this.height) {
-          continue;
+    placeEntity(x: number, y: number, entity: IEntity): void {
+        const tile = this.getTile(x, y);
+        if (tile) {
+            tile.unit = entity;
+        } else {
+            console.error(`Unable to place entity: ${entity}`);
+        }
+        entity.setPos(x, y);
+    }
+
+    moveEntity(entity: IEntity, toX : number, toY: number) : void {
+        const fromTile = this.getTile(entity.PosX, entity.PosY);
+        const toTile = this.getTile(toX, toY);
+
+        if (!fromTile.unit) {
+            console.error(`No entity found at ${entity.posX}, ${entity.posY} to move.`);
+            return;
+        }
+        if (toTile.unit) {
+            console.error(`Tile ${toX}, ${toY} already occupied by another entity.`);
+            return;
         }
 
-        if (isVisited[ny]![nx]) {
-          continue;
+        toTile.unit = fromTile.unit;
+        fromTile.unit = null;
+
+        entity.setPos(toX, toY);
+    }
+
+    placeBuilding(x: number, y: number, building: IBuilding): void {
+        const tile = this.getTile(x, y);
+        if (tile) {
+            tile.building = building;
+        } else {
+            console.error(`Unable to place entity: ${building}`);
+        }
+    }
+
+    getDistance(startX: number, startY: number, endX: number, endY: number): number {
+        if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX >= this.width || startY >= this.height || endX >= this.width || endY >= this.height) {
+            return -1;
         }
 
-        isVisited[ny]![nx] = true;
-
-        if (nx === endX && ny === endY) {
-          return dist + 1;
+        if (startX == endX && startY == endY) {
+            return 0;
         }
 
-        queue.push({ x: nx, y: ny, dist: dist + 1 });
-      }
+        const isVisited: boolean[][] = [];
+
+        for (let y = 0; y < this.height; y++) {
+            isVisited[y] = []
+            for (let x = 0; x < this.width; x++) {
+                isVisited[y]![x] = false;
+            }
+        }
+
+        const queue: { x: number; y: number; dist: number }[] = [];
+        queue.push({ x: startX, y: startY, dist: 0 });
+
+        isVisited[startY]![startX] = true;
+
+        const directions = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
+
+        while (queue.length > 0) {
+            const { x, y, dist } = queue.shift()!;
+
+            for (const dir of directions) {
+                const nx = x + dir.dx;
+                const ny = y + dir.dy;
+
+                if (nx < 0 || ny < 0 || nx >= this.width || ny >= this.height) {
+                    continue;
+                }
+
+                if (isVisited[ny]![nx]) {
+                    continue;
+                }
+
+                isVisited[ny]![nx] = true;
+
+                if (nx === endX && ny === endY) {
+                    return dist + 1;
+                }
+
+                queue.push({ x: nx, y: ny, dist: dist + 1 });
+            }
+        }
+
+        return -1;
+
     }
 
-    return -1;
+    getDistanceUnitTile(fromEntity: Entity, endX: number, endY: number): number {
+        const startX: number = fromEntity.PosX;
+        const startY: number = fromEntity.PosY;
 
-  }
-
-  getDistanceUnitTile(fromEntity: Entity, endX: number, endY: number): number {
-    const startX: number = fromEntity.PosX;
-    const startY: number = fromEntity.PosY;
-
-    return this.getDistance(startX, startY, endX, endY);
-  }
-
-  getDistanceUnitUnit(fromEntity: IEntity, toEntity: IEntity): number {
-    const startX: number = fromEntity.PosX;
-    const startY: number = fromEntity.PosY;
-    const endX: number = toEntity.PosX;
-    const endY: number = toEntity.PosY;
-
-    return this.getDistance(startX, startY, endX, endY);
-  }
-
-  getUnit(x: number, y: number) {
-    if (!(x < 0) || !(x > this.width) || !(y < 0) || !(y > this.height) && (this.getTile(x, y).unit !== null)) {
-      return this.getTile(x, y).unit;
+        return this.getDistance(startX, startY, endX, endY);
     }
-    return null;
-  }
 
-  print(): void {
-    for (const row of this.grid) {
-      console.log(row.map(t => t.terrain[0]!.toUpperCase()).join(" "));
+    getDistanceUnitUnit(fromEntity: IEntity, toEntity: IEntity): number {
+        const startX: number = fromEntity.PosX;
+        const startY: number = fromEntity.PosY;
+        const endX: number = toEntity.PosX;
+        const endY: number = toEntity.PosY;
+
+        return this.getDistance(startX, startY, endX, endY);
     }
-  }
 
-  clear(): void {
-    this.grid.length = 0;
-    this.width = 0;
-    this.height = 0;
-  }
+    getUnit(x: number, y: number) {
+        if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+            return null;
+        }
+        return this.getTile(x, y).unit;
+    }
 
-  getState(): IGameMapState {
-    const grid = this.grid.map(row => row.map(tile => tile.getState()));
-    return {
-      width: this.width,
-      height: this.height,
-      grid,
-    };
-  }
+    print(): void {
+        for (const row of this.grid) {
+            console.log(row.map(t => t.terrain[0]!.toUpperCase()).join(" "));
+        }
+    }
 
-  restoreFromState(state: IGameMapState, context: IRestoreContext): void {
-    this.width = state.width;
-    this.height = state.height;
+    clear(): void {
+        this.grid.length = 0;
+        this.width = 0;
+        this.height = 0;
+    }
 
-    this.grid = state.grid.map(row => row.map(tileState => {
-      const tile = new Tile();
-      tile.restoreFromState(tileState, context);
-      return tile;
-    }));
-  }
+    getState(): IGameMapState {
+        const grid = this.grid.map(row => row.map(tile => tile.getState()));
+        return {
+            width: this.width,
+            height: this.height,
+            grid,
+        };
+    }
+
+    restoreFromState(state: IGameMapState, context: IRestoreContext): void {
+        this.width = state.width;
+        this.height = state.height;
+
+        this.grid = state.grid.map(row => row.map(tileState => {
+            const tile = new Tile();
+            tile.restoreFromState(tileState, context);
+            return tile;
+        }));
+    }
 }

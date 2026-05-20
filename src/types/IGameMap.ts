@@ -21,7 +21,7 @@ export interface IGameMap {
   restoreFromState(state: IGameMapState, context: IRestoreContext): void
   
   placeEntity(x: number, y: number, entity: IEntity): void
-  moveEntity(fromX: number, fromY: number, toX: number, toY: number, entity: IEntity): void
+  moveEntity(Entity: IEntity, toX : number, toY: number): void
   placeBuilding(x: number, y: number, building: IBuilding): void
   print(): void
   clear(): void

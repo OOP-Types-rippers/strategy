@@ -1,5 +1,5 @@
-import { IBuilding, IBuildingState } from "../types/IBuilding";
-import { IRestoreContext } from "../types/IRestoreContext";
+import { IBuilding, IBuildingState } from "../IBuilding";
+import { IRestoreContext } from "../IRestoreContext";
 
 export abstract class BuildingBase implements IBuilding {
   name: string;
