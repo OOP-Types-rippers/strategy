@@ -13,6 +13,8 @@ export interface IGameMap {
   width: number
   height: number
   grid: ITile[][]
+
+    buildMap(): void
   
   getTile(x: number, y: number): ITile
   setTile(x: number, y: number, terrain: TerrainType): void
@@ -25,4 +27,6 @@ export interface IGameMap {
   placeBuilding(x: number, y: number, building: IBuilding): void
   print(): void
   clear(): void
+
+    getSeed(): number;
 }

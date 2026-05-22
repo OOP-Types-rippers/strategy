@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #fff;
+}
+
+#app {
+    width: 100vw;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+/* Main Page */
+.main-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.main-page h1 {
+    font-size: 4em;
+    margin-bottom: 50px;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.menu {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+}
+
+.menu button {
+    padding: 15px 40px;
+    font-size: 20px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #4A90E2, #2E5C96);
+    color: white;
+    border: 2px solid #FFD700;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.menu button:hover {
+    background: linear-gradient(135deg, #5BA3F5, #3D7ACC);
+    box-shadow: 0 0 20px rgba(75, 144, 226, 0.6);
+    transform: translateY(-2px);
+}
+
+.menu button:active {
+    transform: translateY(0);
+}
+
+/* Game Page */
+.game-page {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#game-info {
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.game-header {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(74, 144, 226, 0.1);
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 3px solid #4A90E2;
+}
+
+.info-block span {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.info-block strong {
+    color: #FFD700;
+    font-size: 16px;
+}
+
+#map-container {
+    background: #0a0a0a;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+canvas {
+    display: block;
+    margin: auto;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.game-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.game-controls button {
+    padding: 12px 25px;
+    font-size: 15px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #4A90E2, #2E5C96);
+    color: white;
+    border: 1px solid #666;
+    border-radius: 6px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.game-controls button:hover {
+    background: linear-gradient(135deg, #5BA3F5, #3D7ACC);
+    box-shadow: 0 0 15px rgba(75, 144, 226, 0.5);
+    transform: translateY(-1px);
+}
+
+.game-controls button:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-page h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
+
+    .menu {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .menu button {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    .game-header {
+        grid-template-columns: 1fr;
+    }
+}
