@@ -5,7 +5,8 @@
   "description": "Simple strategy game similar to Ancient Empires",
   "main": "src/index.ts",
   "scripts": {
-    "test": "ts-node src/test/index.ts"
+    "test": "ts-node src/test/index.ts",
+    "test:ai": "ts-node src/test/ai/ai.test.ts"
   },
   "repository": {
     "type": "git",

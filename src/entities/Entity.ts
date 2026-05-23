@@ -105,7 +105,6 @@ export class Entity implements IEntity {
     else {
       this.hp += bonus;
       this.hp = Math.floor(this.hp * 10) / 10;    //Rounding down to 1 decimal place
-
     }
   }
 
@@ -125,6 +124,12 @@ export class Entity implements IEntity {
 
   toAttack(unit: IEntity) {
     unit.takeDamage(this);
+    this.canAttack = false;
+  }
+
+  onTurn() {
+    this.canMove = true
+    this.canAttack = true
   }
 
   get UTS(): UnitTerrainStats {
