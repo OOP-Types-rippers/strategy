@@ -31,3 +31,25 @@ Based on the technical specifications (`ТЗ GameMap.txt`), the visual layer is 
 - **Dependency Injection**: Renderers, Savers, and Input Controllers are injected into the `GameController` upon instantiation. The engine does not care *how* it is rendered or *how* input is received.
 - **Memento**: The system supports saving, loading, and turn-rollback capabilities. The `GameController`, `GameMap`, and `Entity` classes implement `getState()` and `restoreFromState()` methods. This allows the system to snapshot the entire simulation into an `IGameState` object, append it to a history stack, or persist it via `FSGameSaver`.
 - **Strategy / State**: Handled implicitly through different input controllers (AI vs Human) managing the turn phases.
+
+## 5. Visual Interface
+
+**Task Description:**
+The goal is to develop a browser-based visual interface using the HTML5 Canvas API. The interface must render the turn-based game map, including various terrain types (obstacles, resources), structures (e.g., unit factories), and distinct combat units. The rendering layer must remain strictly decoupled from the core game engine. It will receive a serialized snapshot of the game state (`IGameState`) and visually represent it. Additionally, it must handle user input via mouse interactions, converting pixel coordinates into logical map grid coordinates, and forward these interactions to the game's input system.
+
+**Object Interactions:**
+1. **`GameController` -> `IRenderer` (e.g., `CanvasRenderer` / `MapRenderer`)**
+   - The `GameController` holds a reference to the `IRenderer` interface.
+   - After any state mutation (e.g., unit moved, turn ended), the `GameController` invokes `renderer.render(state)` and passes the current `IGameState`.
+2. **`MapRenderer` -> `CanvasRenderingContext2D`**
+   - Parses the `IGameState` and clears the canvas.
+   - Iterates through the 2D map grid to draw terrain tiles, shadows, and textures.
+   - Queries individual tiles to draw associated `IBuildingState` (factories, defenses) and `IEntityState` (units with HP bars, faction colors).
+3. **`MapRenderer` -> Browser DOM Events**
+   - Registers `click` and `mousemove` listeners on the `<canvas>` element.
+   - Converts raw pixel `(clientX, clientY)` coordinates into logical grid coordinates `(tileX, tileY)` considering padding and tile size.
+   - Dispatches custom events (e.g., `tileSelected`) with the logical coordinates.
+4. **`HumanInputController` / UI Layer -> `GameController`**
+   - Listens to the visual custom events (`tileSelected`).
+   - Translates these selections into game commands (e.g., selecting a unit, choosing a target tile for movement/attack, interacting with a factory).
+   - Invokes core commands on the `GameController` to apply business logic, completing the interaction loop.
