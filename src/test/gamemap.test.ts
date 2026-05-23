@@ -52,7 +52,7 @@ export function testGameMap() {
 
     let archer: Archer = new Archer();
     map.placeEntity(randomX5, randomY5, archer);
-    console.log(`The Unit ${archer.name} was placed on ${archer.PosX}, ${archer.posY}. Distance between Archer and ${randomX6}, ${randomY6} equals: ${map.getDistanceUnitTile(archer, randomX6, randomY6)}`);
+    console.log(`The Unit ${archer.id} was placed on ${archer.PosX}, ${archer.posY}. Distance between Archer and ${randomX6}, ${randomY6} equals: ${map.getDistanceUnitTile(archer, randomX6, randomY6)}`);
 
     map.moveEntity(archer, randomX7, randomY7);
     console.log(`The Archer has been moved on ${archer.posX}, ${archer.posY}`);
