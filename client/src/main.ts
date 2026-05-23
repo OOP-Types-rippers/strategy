@@ -1,7 +1,6 @@
 import { GameController } from "../../src/core/GameController";
 import { HTMLRenderer } from "./renderers/HTMLRenderer";
 import { MapGenerator } from "../../src/map/MapGenerator";
-<<<<<<< Updated upstream
 import { FactionsGenerator } from "../../src/factions/FactionsGenerator";
 
 function createGame(mapSize: number, factionCount: number) {
@@ -18,15 +17,3 @@ function createGame(mapSize: number, factionCount: number) {
 
   return gameController;
 }
-=======
-
-function createGame(mapSize: number, factionCount: number) {
-  const mapGenerator = new MapGenerator();
-  const map = mapGenerator.generateMap(16, 8);
-
-  const renderer = new HTMLRenderer();
-
-  const gameController = new GameController();
-}
-
->>>>>>> Stashed changes
