@@ -3,7 +3,7 @@ import { TerrainType } from "./Terrain"
 import { IRestoreContext } from "../types/IRestoreContext";
 
 export interface IEntityState {
-  name: string;
+  id: string;
   price: number;
   hp: number;
   maxHp: number;
@@ -25,7 +25,7 @@ export type UnitTerrainStats = Partial<
   Record<TerrainType, Partial<ITerrainSingleStat>>
 >;
 export interface IEntity {
-  name: string;
+  id: string;
   price: number;
   hp: number;
   maxHp: number;
