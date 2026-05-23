@@ -98,6 +98,13 @@ export class GameMap implements IGameMap {
         entity.setPos(x, y);
     }
 
+    removeEntity(x: number, y: number): void {
+        const tile = this.getTile(x, y);
+        if (tile) {
+            tile.unit = null;
+        }
+    }
+
     moveEntity(entity: IEntity, toX : number, toY: number) : void {
         const fromTile = this.getTile(entity.PosX, entity.PosY);
         const toTile = this.getTile(toX, toY);

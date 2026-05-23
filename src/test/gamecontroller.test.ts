@@ -8,7 +8,7 @@ import { TestRenderer } from "../io/TestRenderer";
 export async function testGameController() {
   console.log("Testing Game Controller: ");
 
-  const map = new GameMap(3, 3, "grass");
+  const map = new GameMap(5, 5, "grass");
   const factionA = new Faction("red", 0xFF0000, 100);
   const unitA = new Knight();
   unitA.faction = factionA;

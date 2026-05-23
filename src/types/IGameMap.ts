@@ -13,8 +13,6 @@ export interface IGameMap {
   width: number
   height: number
   grid: ITile[][]
-
-    buildMap(): void
   
   getTile(x: number, y: number): ITile
   setTile(x: number, y: number, terrain: TerrainType): void
@@ -23,10 +21,9 @@ export interface IGameMap {
   restoreFromState(state: IGameMapState, context: IRestoreContext): void
   
   placeEntity(x: number, y: number, entity: IEntity): void
-  moveEntity(Entity: IEntity, toX : number, toY: number): void
+  removeEntity(x: number, y: number): void
+  moveEntity(entity: IEntity, toX: number, toY: number): void
   placeBuilding(x: number, y: number, building: IBuilding): void
   print(): void
   clear(): void
-
-    getSeed(): number;
 }
