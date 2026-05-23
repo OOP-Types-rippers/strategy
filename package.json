@@ -6,7 +6,10 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "ts-node src/test/index.ts",
-    "test:ai": "ts-node src/test/ai/ai.test.ts"
+    "test:ai": "ts-node src/test/ai/ai.test.ts",
+    "client:dev": "vite",
+    "client:build": "vite build",
+    "client:preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -22,5 +25,8 @@
     "simplex-noise": "^4.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "vite": "^8.0.14"
   }
 }
