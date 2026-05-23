@@ -4,57 +4,21 @@ import type { Entity } from "../entities/Entity";
 import type { TerrainType } from "../types/Terrain"
 import type { IGameMap, IGameMapState } from "../types/IGameMap";
 import type { IBuilding } from "../types/IBuilding";
-import { Seed } from "./Seed";
 import { Tile } from "./Tile";
 import { IRestoreContext } from "../types/IRestoreContext";
-import { NoiseFunction } from "./NoiseFunction";
 
 export class GameMap implements IGameMap {
-    seed: Seed;
     width: number;
     height: number;
     grid: ITile[][];
-    private noise: NoiseFunction | null = null;
 
-    constructor(width: number, height: number, defaultTerrain: TerrainType = 'grass', seed?: number) {
+    constructor(width: number, height: number, defaultTerrain: TerrainType = 'grass') {
         this.width = width;
         this.height = height;
-        this.seed = new Seed(seed);
 
         this.grid = Array.from({ length: height }, () =>
             Array.from({ length: width }, () => new Tile(defaultTerrain))
         );
-    }
-
-    public buildMap(): void {
-        this.noise = new NoiseFunction(this.seed.getSeed());
-
-        for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
-                const noiseValue = this.noise.noise2D(x / 10, y / 10);
-
-                let terrain: TerrainType;
-                if (noiseValue < -0.5) {
-                    terrain = 'water';
-                } else if (noiseValue < -0.2) {
-                    terrain = 'road';
-                } else if (noiseValue < 0.0) {
-                    terrain = 'grass';
-                } else if (noiseValue < 0.3) {
-                    terrain = 'forest';
-                } else if (noiseValue < 0.6) {
-                    terrain = 'mountain';
-                } else {
-                    terrain = 'hill';
-                }
-
-                this.setTile(x, y, terrain);
-            }
-        }
-    }
-
-    getSeed(): number {
-        return this.seed.getSeed();
     }
 
     getTile(x: number, y: number): ITile {
@@ -96,6 +60,13 @@ export class GameMap implements IGameMap {
             console.error(`Unable to place entity: ${entity}`);
         }
         entity.setPos(x, y);
+    }
+
+    removeEntity(x: number, y: number): void {
+        const tile = this.getTile(x, y);
+        if (tile) {
+            tile.unit = null;
+        }
     }
 
     moveEntity(entity: IEntity, toX : number, toY: number) : void {
