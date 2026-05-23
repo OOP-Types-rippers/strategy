@@ -10,7 +10,7 @@ export class Entity implements IEntity {
   attack: number;
   defense: number;
   movepoints: number;
-  name: string;
+  typeId: string;
   posX: number;
   posY: number;
   hasMoved: boolean;
@@ -26,7 +26,7 @@ export class Entity implements IEntity {
     this.attack = 0;
     this.defense = 0;
     this.movepoints = 0;
-    this.name = "";
+    this.typeId = "";
     this.posX = -1;
     this.posY = -1;
     this.hasMoved = false;
@@ -136,7 +136,7 @@ export class Entity implements IEntity {
     return this.unitTerrainStats;
   }
   restoreFromState(entityState: IEntityState, context: IRestoreContext) {
-    this.name = entityState.name;
+    this.typeId = entityState.typeId;
     this.price = entityState.price;
     this.hp = entityState.hp;
     this.maxHp = entityState.maxHp;
@@ -150,7 +150,7 @@ export class Entity implements IEntity {
   }
   getState(): IEntityState {
     return {
-      name: this.name,
+      typeId: this.typeId,
       price: this.price,
       hp: this.hp,
       maxHp: this.maxHp,
@@ -173,7 +173,7 @@ export class Soldier extends Entity {
   attack = 5;
   defense = 1.0;
   movepoints = 4;
-  name = "Soldier";
+  typeId = "Soldier";
 }
 
 export class Archer extends Entity {
@@ -183,7 +183,7 @@ export class Archer extends Entity {
   attack = 5;
   defense = 1.0;
   movepoints = 4;
-  name = "Archer";
+  typeId = "Archer";
 }
 
 export class Lizard extends Entity {
@@ -193,7 +193,7 @@ export class Lizard extends Entity {
   attack = 5;
   defense = 1.0;
   movepoints = 3;
-  name = "Lizard";
+  typeId = "Lizard";
   unitTerrainStats = { water: { moveCost: 0.5, defenseBonus: 2 } };
 }
 
@@ -204,7 +204,7 @@ export class Wizard extends Entity {
   attack = 4;
   defense = 1.0;
   movepoints = 4;
-  name = "Wizard";
+  typeId = "Wizard";
 }
 
 export class Knight extends Entity {
@@ -214,7 +214,7 @@ export class Knight extends Entity {
   attack = 6;
   defense = 2.0;
   movepoints = 4;
-  name = "Knight";
+  typeId = "Knight";
 }
 
 export class Golem extends Entity {
@@ -224,5 +224,5 @@ export class Golem extends Entity {
   attack = 6;
   defense = 4.0;
   movepoints = 4;
-  name = "Golem";
+  typeId = "Golem";
 }
