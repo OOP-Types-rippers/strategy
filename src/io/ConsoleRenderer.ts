@@ -21,7 +21,7 @@ export class ConsoleRenderer implements IRenderer {
 
     state.map.grid.forEach((row, y) => {
       const rowStr = row.map((tile) => {
-        const unitChar = tile.unit?.name[0]?.toUpperCase() ?? " ";
+        const unitChar = tile.unit?.id[0]?.toUpperCase() ?? " ";
         const terrainChar = tile.terrain === "grass" ? "." : tile.terrain[0]!.toUpperCase();
         return unitChar + terrainChar;
       }).join("|");
@@ -32,7 +32,7 @@ export class ConsoleRenderer implements IRenderer {
   }
 
   caption(winner: IFaction | null, turns: number): void {
-    const winnerName = winner?.name ?? "noone";
+    const winnerName = winner?.name ?? "none";
     console.log(`${winnerName} wins in ${turns} turns`);
   }
 }
