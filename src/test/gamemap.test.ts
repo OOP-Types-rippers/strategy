@@ -1,12 +1,13 @@
 import { Archer } from "../entities/Entity"
-import { GameMap } from "../map/GameMap";
+import { MapGenerator } from "../map/MapGenerator";
 
 export function testGameMap() {
     console.log("Testing game map:\n");
 
-    const map = new GameMap(3, 3, "grass", 1);
+    const mapGenerator = new MapGenerator();
+    const map = mapGenerator.generateMap(10, 10);
 
-    console.log(`The map was created with a seed: ${map.seed.getSeed()}`);
+    console.log(`The map was created with a seed: ${mapGenerator.seed}`);
     map.print();
 
     const randomX1 : number = Math.floor(Math.random() * map.width);

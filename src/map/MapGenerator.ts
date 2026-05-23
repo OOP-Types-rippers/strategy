@@ -6,7 +6,7 @@ export class MapGenerator {
   private _seed: number;
   private noise: NoiseFunction;
 
-  constructor(seed: number) {
+  constructor(seed: number = 42) {
     this._seed = seed;
     this.noise = new NoiseFunction(seed);
   }
