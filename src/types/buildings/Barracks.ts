@@ -1,6 +1,6 @@
 import { BuildingBase } from "./BuildingBase";
-import { IRestoreContext } from "../types/IRestoreContext";
-import { IBuildingState } from "../types/IBuilding";
+import { IRestoreContext } from "../IRestoreContext";
+import { IBuildingState } from "../IBuilding";
 
 export class Barracks extends BuildingBase {
   trainingQueue: string[] = [];

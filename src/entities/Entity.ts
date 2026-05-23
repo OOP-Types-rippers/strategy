@@ -13,6 +13,7 @@ export class Entity implements IEntity {
   name: string;
   posX: number;
   posY: number;
+  hasMoved: boolean;
   faction: IFaction | null;
   unitTerrainStats: UnitTerrainStats;
   canAttack: boolean;
@@ -28,6 +29,7 @@ export class Entity implements IEntity {
     this.name = "";
     this.posX = -1;
     this.posY = -1;
+    this.hasMoved = false;
     this.canMove = true;
     this.canAttack = false;
     this.faction = null;
@@ -59,6 +61,19 @@ export class Entity implements IEntity {
     return this.attack;
   }
 
+    get PosX() {
+        return this.posX;
+    }
+    get PosY() {
+        return this.posY;
+    }
+
+    setPos(newPosX: number, newPosY: number): void{
+        this.posX = newPosX;
+        this.posY = newPosY;
+        return;
+    }
+
   setAttack(newAttack: number): void {
     this.attack = newAttack;
     if (this.attack < 0) this.attack = 0;
@@ -84,16 +99,6 @@ export class Entity implements IEntity {
     if (this.movepoints < 0) this.movepoints = 0;
     return;
   }
-  get PosX() {
-    return this.posX;
-  }
-  get PosY() {
-    return this.posY;
-  }
-  setPos(newPosX: number, newPosY: number) {
-
-  }
-
 
   increaseHP(bonus: number): void {
     if (this.hp + bonus >= this.maxHp) this.hp = this.maxHp

@@ -8,7 +8,7 @@ import { FSGameSaver } from "../io/FSGameSaver";
 export function testGameController() {
   console.log("Testing Game Controller: ");
 
-  const map = new GameMap(5, 5, "grass");
+  const map = new GameMap(3, 3, "grass");
   const factionA = new Faction("red", 0xFF0000, 100);
   const factionB = new Faction("blue", 0x0000FF, 100);
   const renderer = new ConsoleRenderer();

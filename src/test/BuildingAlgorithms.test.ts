@@ -1,6 +1,6 @@
-import { Castle } from '../../src/types/buildings/Castle';
-import { Village } from '../../src/types/buildings/Village';
-import { BuildingAlgorithms } from '../../src/types/buildings/BuildingAlgorithms';
+import { Castle } from '../types/buildings/Castle';
+import { Village } from '../types/buildings/Village';
+import { BuildingAlgorithms } from '../types/buildings/BuildingAlgorithms';
 
 describe('BuildingAlgorithms', () => {
   let buildings: any[];
