@@ -14,7 +14,8 @@ export class CanvasRenderer implements IRenderer {
     private highlightRenderer: CanvasHighlightRenderer;
     
     private _camera: Camera;
-    private _tileSize = 32;
+    private _tileSize = 128;
+    private lastState?: IGameState;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -23,6 +24,9 @@ export class CanvasRenderer implements IRenderer {
 
         this.context = ctx;
 
+        this.resize();
+        window.addEventListener("resize", () => this.resize());
+
         this.terrainRenderer = new CanvasTerrainRenderer(this.context, this._tileSize);
         this.entityRenderer = new CanvasEntityRenderer(this.context, this._tileSize);
         this.highlightRenderer = new CanvasHighlightRenderer(this.context, this._tileSize);
@@ -30,7 +34,20 @@ export class CanvasRenderer implements IRenderer {
         this._camera = new Camera();
     }
 
+    private resize(): void {
+        const rect = this.canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        this.context.scale(dpr, dpr);
+        
+        if (this.lastState) {
+            this.render(this.lastState);
+        }
+    }
+
     public render(state: IGameState): void {
+        this.lastState = state;
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.context.save();
