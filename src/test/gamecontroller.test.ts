@@ -51,7 +51,7 @@ export async function testGameController() {
   }
 
   game.selectTile(0, 0)
-  if (game.map.getTile(0, 0) !== game.selectedTile) {
+  if (game.selectedTile?.x !== 0 || game.selectedTile?.y !== 0) {
     console.error(`Expected tile at (0, 0) to be selected`);
     errors++;
   }
