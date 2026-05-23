@@ -5,6 +5,6 @@ export interface IGameState {
   map: IGameMapState;
   factions: IFactionState[];
   currentFaction: string;
-  selection: {x: number, y: number}; 
+  selection: {x: number, y: number} | null; 
   turn: number;
 }

@@ -12,7 +12,7 @@ import { Faction } from "../factions/Faction";
 export class GameController {
   public turn: number;
   public currentFaction: IFaction;
-  public selectedTile: ITile | null = null;
+  public selectedTile: { x: number, y: number } | null = null;
 
   private controllers = new Map<IFaction, InputController>();
   private history: IGameState[] = [];
@@ -67,26 +67,30 @@ export class GameController {
   }
 
   public selectTile(x: number, y: number) {
+    if (this.selectedTile?.x === x && this.selectedTile?.y === y) return;
+    
     const targetTile = this.map.getTile(x, y);
-    if (targetTile === this.selectedTile) return
 
-    if (this.selectedTile?.unit && this.selectedTile.unit.faction === this.currentFaction) {
-      const selectedUnit = this.selectedTile.unit;
-      const distance = Math.abs(selectedUnit.posX - x) + Math.abs(selectedUnit.posY - y);
-
-      if (
-        targetTile.unit
-        && targetTile.unit.faction !== this.currentFaction
-        && selectedUnit.canAttack
-        && distance === 1
-      ) {
-        selectedUnit.toAttack(targetTile.unit);
-        if (targetTile.unit.hp <= 0) this.map.removeEntity(x, y);
-      } else if (!targetTile.unit && distance <= selectedUnit.movepoints) { // replace with actual distance function later
-        this.map.moveEntity(selectedUnit, x, y);
+    if (this.selectedTile) {
+      const prevTile = this.map.getTile(this.selectedTile.x, this.selectedTile.y);
+      if (prevTile.unit && prevTile.unit.faction === this.currentFaction) {
+        const selectedUnit = prevTile.unit;
+        const distance = Math.abs(selectedUnit.posX - x) + Math.abs(selectedUnit.posY - y);
+  
+        if (
+          targetTile.unit
+          && targetTile.unit.faction !== this.currentFaction
+          && selectedUnit.canAttack
+          && distance === 1
+        ) {
+          selectedUnit.toAttack(targetTile.unit);
+          if (targetTile.unit.hp <= 0) this.map.removeEntity(x, y);
+        } else if (!targetTile.unit && distance <= selectedUnit.movepoints) { // replace with actual distance function later
+          this.map.moveEntity(selectedUnit, x, y);
+        }
       }
     }
-    this.selectedTile = targetTile;
+    this.selectedTile = { x, y };
     this.render();
   }
 
@@ -104,6 +108,7 @@ export class GameController {
       map: this.map.getState(),
       factions: this.factions,
       currentFaction: this.currentFaction.name,
+      selection: this.selectedTile,
       turn: this.turn,
     }
     return state;
