@@ -2,7 +2,7 @@ export class Camera {
   public offsetX: number = 0;
   public offsetY: number = 0;
 
-  public zoom: number = 1;
+  public zoom: number = 0.25;
   public minZoom: number = 0.25;
   public maxZoom: number = 4;
 
