@@ -34,6 +34,7 @@ export interface IEntity {
   movepoints: number;
   posX: number;
   posY: number;
+  hasMoved: boolean;
   faction: IFaction | null;
   unitTerrainStats: UnitTerrainStats;
   canMove: boolean;
