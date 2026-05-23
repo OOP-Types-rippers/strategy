@@ -106,24 +106,31 @@ export class GameMap implements IGameMap {
             return 0;
         }
 
-        const isVisited: boolean[][] = [];
-
+        const distances: number[][] = [];
         for (let y = 0; y < this.height; y++) {
-            isVisited[y] = []
+            distances[y] = [];
             for (let x = 0; x < this.width; x++) {
-                isVisited[y]![x] = false;
+                distances[y]![x] = Infinity;
             }
         }
 
-        const queue: { x: number; y: number; dist: number }[] = [];
-        queue.push({ x: startX, y: startY, dist: 0 });
-
-        isVisited[startY]![startX] = true;
+        const queue: { x: number; y: number; cost: number }[] = [];
+        distances[startY]![startX] = 0;
+        queue.push({ x: startX, y: startY, cost: 0 });
 
         const directions = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
 
         while (queue.length > 0) {
-            const { x, y, dist } = queue.shift()!;
+            queue.sort((a, b) => a.cost - b.cost);
+            const { x, y, cost } = queue.shift()!;
+
+            if (cost > distances[y]![x]!) {
+                continue;
+            }
+
+            if (x === endX && y === endY) {
+                return cost;
+            }
 
             for (const dir of directions) {
                 const nx = x + dir.dx;
@@ -133,22 +140,16 @@ export class GameMap implements IGameMap {
                     continue;
                 }
 
-                if (isVisited[ny]![nx]) {
-                    continue;
+                const newCost = cost + this.getTile(nx, ny).moveCost;
+
+                if (newCost < distances[ny]![nx]!) {
+                    distances[ny]![nx] = newCost;
+                    queue.push({ x: nx, y: ny, cost: newCost });
                 }
-
-                isVisited[ny]![nx] = true;
-
-                if (nx === endX && ny === endY) {
-                    return dist + 1;
-                }
-
-                queue.push({ x: nx, y: ny, dist: dist + 1 });
             }
         }
 
         return -1;
-
     }
 
     getDistanceUnitTile(fromEntity: Entity, endX: number, endY: number): number {

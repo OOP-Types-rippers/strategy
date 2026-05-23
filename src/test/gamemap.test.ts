@@ -1,11 +1,12 @@
 import { Archer } from "../entities/Entity"
+import { GameMap } from "../map/GameMap";
 import { MapGenerator } from "../map/MapGenerator";
 
 export function testGameMap() {
     console.log("Testing game map:\n");
 
     const mapGenerator = new MapGenerator();
-    const map = mapGenerator.generateMap(10, 10);
+    const map = mapGenerator.generateMap(4, 4);
 
     console.log(`The map was created with a seed: ${mapGenerator.seed}`);
     map.print();
@@ -42,6 +43,13 @@ export function testGameMap() {
     map.print();
 
     console.log(`Distance between ${randomX4}, ${randomY4} and ${randomX5}, ${randomY5} equals: ${map.getDistance(randomX4, randomY4, randomX5, randomY5)}`);
+    const weightedMap = new GameMap(4, 2, "road");
+    weightedMap.setTile(1, 0, "mountain");
+    weightedMap.setTile(2, 0, "mountain");
+    if (weightedMap.getDistance(0, 0, 3, 0) !== 5) {
+        console.error(`Expected weighted distance to prefer road path with cost 5`);
+    }
+
     let archer: Archer = new Archer();
     map.placeEntity(randomX5, randomY5, archer);
     console.log(`The Unit ${archer.name} was placed on ${archer.PosX}, ${archer.posY}. Distance between Archer and ${randomX6}, ${randomY6} equals: ${map.getDistanceUnitTile(archer, randomX6, randomY6)}`);
@@ -53,5 +61,3 @@ export function testGameMap() {
     console.log("The map was cleared.");
     map.print();
 }
-
-testGameMap();
