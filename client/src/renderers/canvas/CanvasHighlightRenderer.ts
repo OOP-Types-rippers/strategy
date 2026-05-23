@@ -31,13 +31,15 @@ export class CanvasHighlightRenderer implements IRenderer {
   }
 
   private drawActionHighlights(
-    state: IGameState,
-    selectedTile: ITileState,
-    selectedX: number,
-    selectedY: number,
-  ): void {
+      state: IGameState,
+      selectedTile: ITileState,
+      selectedX: number,
+      selectedY: number,
+      ): void {
     const selectedUnit = selectedTile.unit;
     if (!selectedUnit) return;
+
+    const distances = this.calculateDistanceMap(state, selectedX, selectedY);
 
     for (let y = 0; y < state.map.height; y++) {
       for (let x = 0; x < state.map.width; x++) {
@@ -46,7 +48,7 @@ export class CanvasHighlightRenderer implements IRenderer {
         const tile = state.map.grid[y]?.[x];
         if (!tile) continue;
 
-        const distance = Math.abs(selectedX - x) + Math.abs(selectedY - y);
+        const distance = distances[y]?.[x] ?? Infinity;
 
         if (selectedUnit.canMove && !tile.unit && distance <= selectedUnit.movepoints) {
           this.drawMoveTile(x, y);
@@ -62,6 +64,70 @@ export class CanvasHighlightRenderer implements IRenderer {
         }
       }
     }
+  }
+
+  private calculateDistanceMap(
+    state: IGameState,
+    startX: number,
+    startY: number,
+  ): number[][] {
+    const distances = Array.from(
+      { length: state.map.height },
+      () => Array.from({ length: state.map.width }, () => Infinity),
+    );
+
+    if (
+      startX < 0
+      || startY < 0
+      || startX >= state.map.width
+      || startY >= state.map.height
+    ) {
+      return distances;
+    }
+
+    const queue: { x: number; y: number; cost: number }[] = [
+      { x: startX, y: startY, cost: 0 },
+    ];
+    distances[startY]![startX] = 0;
+
+    const directions = [
+      { dx: 1, dy: 0 },
+      { dx: -1, dy: 0 },
+      { dx: 0, dy: 1 },
+      { dx: 0, dy: -1 },
+    ];
+
+    while (queue.length > 0) {
+      queue.sort((a, b) => a.cost - b.cost);
+      const { x, y, cost } = queue.shift()!;
+
+      if (cost > distances[y]![x]!) continue;
+
+      for (const direction of directions) {
+        const nextX = x + direction.dx;
+        const nextY = y + direction.dy;
+
+        if (
+          nextX < 0
+          || nextY < 0
+          || nextX >= state.map.width
+          || nextY >= state.map.height
+        ) {
+          continue;
+        }
+
+        const nextTile = state.map.grid[nextY]?.[nextX];
+        if (!nextTile) continue;
+
+        const nextCost = cost + 1;
+        if (nextCost < distances[nextY]![nextX]!) {
+          distances[nextY]![nextX] = nextCost;
+          queue.push({ x: nextX, y: nextY, cost: nextCost });
+        }
+      }
+    }
+
+    return distances;
   }
 
   private drawSelectedTile(x: number, y: number): void {
