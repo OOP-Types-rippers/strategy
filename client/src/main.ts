@@ -8,6 +8,7 @@ function createGame(mapSize: number, factionCount: number) {
   const map = mapGenerator.generateMap(mapSize, mapSize);
 
   const renderer = new HTMLRenderer();
+  // document.addEventListener("resize")
 
   const factionsGenerator = new FactionsGenerator();
   const factions = factionsGenerator.generateFactions(factionCount);
@@ -17,3 +18,6 @@ function createGame(mapSize: number, factionCount: number) {
 
   return gameController;
 }
+
+const game = createGame(16, 2);
+game.start();
