@@ -5,7 +5,9 @@ import { HTMLRenderer } from "../renderers/HTMLRenderer";
 export class HTMLInputController extends InputController {
   private canvas: HTMLCanvasElement;
   private renderer: HTMLRenderer;
+  private endTurnButton: HTMLButtonElement;
   private boundHandleClick: (event: MouseEvent) => void;
+  private boundHandleEndTurnClick: () => void;
 
   constructor(gameController: GameController, renderer: HTMLRenderer) {
     super(gameController);
@@ -16,7 +18,19 @@ export class HTMLInputController extends InputController {
       throw new Error("Could not find canvas element with id 'map'");
     }
     this.canvas = canvas;
+    
+    const endTurnBtn = document.querySelector<HTMLButtonElement>("#end-turn-btn");
+    if (!endTurnBtn) {
+      throw new Error("Could not find button element with id 'end-turn-btn'");
+    }
+    this.endTurnButton = endTurnBtn;
+
     this.boundHandleClick = this.handleClick.bind(this);
+    this.boundHandleEndTurnClick = this.handleEndTurnClick.bind(this);
+  }
+
+  private handleEndTurnClick() {
+    this.endTurn();
   }
 
   private handleClick(event: MouseEvent) {
@@ -50,10 +64,15 @@ export class HTMLInputController extends InputController {
   }
 
   public async startTurn(): Promise<void> {
+    console.log(`${this.gameController.currentFaction.name} turn started`);
     document.addEventListener("click", this.boundHandleClick);
+    this.endTurnButton.addEventListener("click", this.boundHandleEndTurnClick);
+    this.endTurnButton.disabled = false;
   }
 
   protected endTurn(): void {
+    this.endTurnButton.disabled = true;
+    this.endTurnButton.removeEventListener("click", this.boundHandleEndTurnClick);
     document.removeEventListener("click", this.boundHandleClick);
     super.endTurn();
   }

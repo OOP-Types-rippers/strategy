@@ -52,11 +52,17 @@ export class GameController {
   }
 
   private checkWinCondition() {
+    let hasUnits = false;
     const aliveFactions = new Set<IFaction>();
 
     this.map.grid.forEach(row => row.forEach(tile => {
-      if (tile.unit?.faction) aliveFactions.add(tile.unit.faction);
+      if (tile.unit) {
+        hasUnits = true;
+        if (tile.unit.faction) aliveFactions.add(tile.unit.faction);
+      }
     }))
+
+    if (!hasUnits) return false;
 
     if (aliveFactions.size <= 1) {
       this.renderer.caption(aliveFactions.values().next().value ?? null, this.turn);
