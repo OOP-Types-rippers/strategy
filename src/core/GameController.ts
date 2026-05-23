@@ -1,12 +1,13 @@
 import type { IGameState } from "../types/IGameState";
-import type { IRenderer } from "../types/IRenderer";
 import type { IFaction } from "../types/IFaction";
-import { ITile } from "../types/ITile";
-import { Faction } from "../factions/Faction";
-import { IRestoreContext } from "../types/IRestoreContext";
-import { IGameSaver } from "../types/IGameSaver";
-import { InputController } from "../io/InputController";
+import type { ITile } from "../types/ITile";
+import type { IRestoreContext } from "../types/IRestoreContext";
+import type { IGameSaver } from "../types/IGameSaver";
+import type { InputController } from "../io/InputController";
+import type { IMasterRenderer } from "../types/IMasterRenderer";
+
 import { GameMap } from "../map/GameMap";
+import { Faction } from "../factions/Faction";
 
 export class GameController {
   public turn: number;
@@ -19,7 +20,7 @@ export class GameController {
   constructor(
     public map: GameMap,
     public factions: IFaction[],
-    private renderer: IRenderer,
+    private renderer: IMasterRenderer,
     private saver: IGameSaver
   ) {
     this.turn = 1;
