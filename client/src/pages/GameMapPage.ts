@@ -13,42 +13,62 @@ export class GameMapPage {
 
     render(container: HTMLElement): void {
         this.container = container;
-        container.innerHTML = `
-      <div class="game-page">
-        <div id="game-info"></div>
-        <div id="map-container" style="width: 100%; overflow: auto; max-height: 600px;"></div>
-        <div class="game-controls">
-          <button id="next-turn-btn">Next Turn</button>
-          <button id="build-btn">Build Structure</button>
-          <button id="save-btn">Save Game</button>
-          <button id="menu-btn">Back to Menu</button>
-        </div>
-      </div>
-    `;
 
-        const mapContainer = document.getElementById('map-container');
-        if (mapContainer) {
-            this.setupRenderer(mapContainer);
-        }
+        const gamePage = document.createElement('div');
+        gamePage.className = 'game-page';
 
+        const gameInfo = document.createElement('div');
+        gameInfo.id = 'game-info';
+        gamePage.appendChild(gameInfo);
+
+        const mapContainer = document.createElement('div');
+        mapContainer.id = 'map-container';
+        mapContainer.style.width = '100%';
+        mapContainer.style.overflow = 'auto';
+        mapContainer.style.maxHeight = '600px';
+        gamePage.appendChild(mapContainer);
+
+        const gameControls = document.createElement('div');
+        gameControls.className = 'game-controls';
+
+        const nextTurnBtn = document.createElement('button');
+        nextTurnBtn.id = 'next-turn-btn';
+        nextTurnBtn.textContent = 'Next Turn';
+        gameControls.appendChild(nextTurnBtn);
+
+        const buildBtn = document.createElement('button');
+        buildBtn.id = 'build-btn';
+        buildBtn.textContent = 'Build Structure';
+        gameControls.appendChild(buildBtn);
+
+        const saveBtn = document.createElement('button');
+        saveBtn.id = 'save-btn';
+        saveBtn.textContent = 'Save Game';
+        gameControls.appendChild(saveBtn);
+
+        const menuBtn = document.createElement('button');
+        menuBtn.id = 'menu-btn';
+        menuBtn.textContent = 'Back to Menu';
+        gameControls.appendChild(menuBtn);
+
+        gamePage.appendChild(gameControls);
+        container.appendChild(gamePage);
+
+        this.setupRenderer(mapContainer);
         this.setupEventListeners();
 
-        // Перший рендер
         this.gameController.map.buildMap();
         this.gameController.map.getSeed();
         this.updateRender();
 
-        // Реальний рендер цикл
         this.startRenderLoop();
     }
 
     private setupRenderer(mapContainer: HTMLElement): void {
         this.renderer = new MapRenderer(mapContainer);
 
-        // Замінити renderer в GameController
         (this.gameController as any).renderer = this.renderer;
 
-        // Слухати events від canvas
         const canvas = mapContainer.querySelector('canvas');
         if (canvas) {
             canvas.addEventListener('tileSelected', (e: Event) => {
@@ -106,7 +126,6 @@ export class GameMapPage {
 
     private startRenderLoop(): void {
         const update = () => {
-            // Для мислення можна додати анімації тут
             this.animationId = requestAnimationFrame(update);
         };
         update();

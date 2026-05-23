@@ -268,33 +268,33 @@ export class MapRenderer {
     }
 
     private drawInfo(state: IGameState): void {
-        const infoDiv = document.getElementById('game-info');
-        if (infoDiv) {
-            const hoveredInfo = this.hoveredTile
-                ? `Hovered: (${this.hoveredTile.x}, ${this.hoveredTile.y})`
-                : '';
+        const padding = 10;
+        const lineHeight = 20;
+        let yOffset = padding;
 
-            const selectedInfo = this.selectedTile
-                ? `Selected: (${this.selectedTile.x}, ${this.selectedTile.y})`
-                : '';
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(0, 0, this.canvas.width, lineHeight * 4 + padding * 2);
 
-            infoDiv.innerHTML = `
-        <div class="game-header">
-          <div class="info-block">
-            <span>Turn: <strong>${state.turn}</strong></span>
-            <span>Faction: <strong>${state.currentFaction}</strong></span>
-          </div>
-          <div class="info-block">
-            <span>Map: ${state.map.width}x${state.map.height}</span>
-            <span>${hoveredInfo}</span>
-            <span>${selectedInfo}</span>
-          </div>
-          <div class="info-block">
-            <span>Factions: ${state.factions.map(f => `${f.name} ($${f.money})`).join(', ')}</span>
-          </div>
-        </div>
-      `;
-        }
+        this.ctx.fillStyle = '#FFF';
+        this.ctx.font = '14px Arial';
+        this.ctx.textAlign = 'left';
+        this.ctx.textBaseline = 'top';
+
+        this.ctx.fillText(`Turn: ${state.turn}`, padding, yOffset);
+        yOffset += lineHeight;
+
+        this.ctx.fillText(`Faction: ${state.currentFaction}`, padding, yOffset);
+        yOffset += lineHeight;
+
+        this.ctx.fillText(`Map: ${state.map.width}x${state.map.height}`, padding, yOffset);
+        yOffset += lineHeight;
+
+        const hoveredInfo = this.hoveredTile ? `(${this.hoveredTile.x}, ${this.hoveredTile.y})` : '';
+        this.ctx.fillText(`Hovered: ${hoveredInfo}`, padding, yOffset);
+        yOffset += lineHeight;
+
+        const selectedInfo = this.selectedTile ? `(${this.selectedTile.x}, ${this.selectedTile.y})` : '';
+        this.ctx.fillText(`Selected: ${selectedInfo}`, padding, yOffset);
     }
 
     private isValidTile(x: number, y: number, mapWidth: number, mapHeight: number): boolean {
