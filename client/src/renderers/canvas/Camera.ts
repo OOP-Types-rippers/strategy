@@ -11,9 +11,20 @@ export class Camera {
     ctx.scale(this.zoom, this.zoom);
   }
 
-  public screenToGrid(screenX: number, screenY: number, tileSize: number) {
+  public screenToGrid(
+    screenX: number,
+    screenY: number,
+    tileSize: number,
+    mapWidthTiles: number,
+    mapHeightTiles: number
+  ): { x: number; y: number } | null {
     const x = Math.floor((screenX - this.offsetX) / (this.zoom * tileSize));
     const y = Math.floor((screenY - this.offsetY) / (this.zoom * tileSize));
+
+    if (x < 0 || x >= mapWidthTiles || y < 0 || y >= mapHeightTiles) {
+      return null;
+    }
+
     return { x, y };
   }
 

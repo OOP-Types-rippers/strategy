@@ -28,10 +28,21 @@ export class HTMLInputController extends InputController {
       const camera = this.renderer.canvasRenderer.camera;
       const tileSize = this.renderer.canvasRenderer.tileSize;
 
-      const tile = camera.screenToGrid(screenX, screenY, tileSize);
+      const tile = camera.screenToGrid(
+        screenX,
+        screenY,
+        tileSize,
+        this.gameController.map.width,
+        this.gameController.map.height
+      );
 
-      console.log(`user clicked on ${tile.x}, ${tile.y}`)
-      this.gameController.selectTile(tile.x, tile.y);
+      if (tile) {
+        console.log(`user clicked on ${tile.x}, ${tile.y}`);
+        this.gameController.selectTile(tile.x, tile.y);
+      } else {
+        console.log(`user clicked outside of canvas or map`);
+        this.gameController.unselectTile();
+      }
     } else {
       console.log(`user clicked outside of canvas`)
       this.gameController.unselectTile();
