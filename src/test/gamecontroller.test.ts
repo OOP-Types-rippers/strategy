@@ -66,7 +66,7 @@ export async function testGameController() {
   game.map.setTile(0, 0, "water");
   const entity = new Entity();
   const typeId = "Barbarian";
-  entity.typeId = typeId;
+  entity.id = typeId;
   game.map.placeEntity(0, 0, entity);
   game.saveState();
 
@@ -78,8 +78,8 @@ export async function testGameController() {
   game.saveGame(saveName);
   
   game.prev();
-  if (game.map.getTile(0, 0).unit?.typeId !== typeId) {
-    console.error(`Expected unit with typeId ${typeId} at (0, 0)`);
+  if (game.map.getTile(0, 0).unit?.id !== typeId) {
+    console.error(`Expected unit with id ${typeId} at (0, 0)`);
     errors++;
   }
 
