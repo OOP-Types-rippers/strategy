@@ -21,7 +21,7 @@ export class GameController {
     public map: GameMap,
     public factions: IFaction[],
     private renderer: IMasterRenderer,
-    private saver: IGameSaver
+    private saver: IGameSaver | null = null
   ) {
     this.turn = 1;
     this.currentFaction = factions[0]!;
@@ -141,15 +141,18 @@ export class GameController {
   }
 
   public saveGame(name: string) {
-    this.saver.save(this.getState(), name);
+    this.saver?.save(this.getState(), name);
   }
   public loadGame(name: string) {
     this.history.length = 0;
 
-    const state = this.saver.load(name);
+    const state = this.saver?.load(name);
+    if (!state) return;
+
     this.restoreFromState(state);
   }
+
   public deleteSave(name: string) {
-    this.saver.delete(name);
+    this.saver?.delete(name);
   }
 }
