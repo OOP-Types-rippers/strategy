@@ -17,3 +17,6 @@ function createGame(mapSize: number, factionCount: number) {
 
   return gameController;
 }
+
+const game = createGame(16, 2);
+game.start();
