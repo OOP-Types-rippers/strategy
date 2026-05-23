@@ -14,9 +14,18 @@ export class HTMLRenderer implements IMasterRenderer {
     if (!canvas) {
       throw new Error("Could not find canvas element with id 'map'");
     }
+    const info = document.querySelector<HTMLElement>("#info");
+    if (!info) {
+      throw new Error("Could not find element with id 'info'");
+    }
+    const status = document.querySelector<HTMLElement>("#status");
+    if (!status) {
+      throw new Error("Could not find element with id 'status'");
+    }
+
     this.canvasRenderer = new CanvasRenderer(canvas);
-    this.infoRenderer = new InfoRenderer();
-    this.statusRenderer = new StatusRenderer();
+    this.infoRenderer = new InfoRenderer(info);
+    this.statusRenderer = new StatusRenderer(status);
   }
 
   public render(state: IGameState): void {
