@@ -14,21 +14,20 @@ export class GameMap implements IGameMap {
     width: number;
     height: number;
     grid: ITile[][];
-    private noise: NoiseFunction | null = null;
+    private noise: NoiseFunction;
 
-    constructor(width: number, height: number, defaultTerrain: TerrainType = 'grass', seed?: number) {
+    constructor(width: number, height: number, defaultTerrain: TerrainType = 'grass', seed: number = 42) {
         this.width = width;
         this.height = height;
         this.seed = new Seed(seed);
+        this.noise = new NoiseFunction(this.seed.getSeed());
 
         this.grid = Array.from({ length: height }, () =>
             Array.from({ length: width }, () => new Tile(defaultTerrain))
         );
     }
 
-    public buildMap(): void {
-        this.noise = new NoiseFunction(this.seed.getSeed());
-
+    public generateMap(): void {
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
                 const noiseValue = this.noise.noise2D(x / 10, y / 10);
