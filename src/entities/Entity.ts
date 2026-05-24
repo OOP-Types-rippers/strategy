@@ -38,6 +38,10 @@ export class Entity implements IEntity {
     return !this.hasMoved;
   }
 
+  set canMove(can: boolean) {
+    this.hasMoved = !can;
+  }
+
   get Hp(): number {
     return this.hp;
   }
