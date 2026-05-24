@@ -52,11 +52,17 @@ export class GameController {
   }
 
   private checkWinCondition() {
+    let hasUnits = false;
     const aliveFactions = new Set<IFaction>();
 
     this.map.grid.forEach(row => row.forEach(tile => {
-      if (tile.unit?.faction) aliveFactions.add(tile.unit.faction);
+      if (tile.unit) {
+        hasUnits = true;
+        if (tile.unit.faction) aliveFactions.add(tile.unit.faction);
+      }
     }))
+
+    if (!hasUnits) return false;
 
     if (aliveFactions.size <= 1) {
       this.renderer.caption(aliveFactions.values().next().value ?? null, this.turn);
@@ -75,17 +81,18 @@ export class GameController {
       const prevTile = this.map.getTile(this.selectedTile.x, this.selectedTile.y);
       if (prevTile.unit && prevTile.unit.faction === this.currentFaction) {
         const selectedUnit = prevTile.unit;
-        const distance = Math.abs(selectedUnit.posX - x) + Math.abs(selectedUnit.posY - y);
+        const walkDistance = this.map.getDistanceUnitTile(selectedUnit, x, y);
+        const attackDistance = Math.abs(selectedUnit.posX - x) + Math.abs(selectedUnit.posY - y);
   
         if (
           targetTile.unit
           && targetTile.unit.faction !== this.currentFaction
           && selectedUnit.canAttack
-          && distance === 1
+          && attackDistance === 1
         ) {
           selectedUnit.toAttack(targetTile.unit);
           if (targetTile.unit.hp <= 0) this.map.removeEntity(x, y);
-        } else if (!targetTile.unit && distance <= selectedUnit.movepoints) { // replace with actual distance function later
+        } else if (!targetTile.unit && walkDistance <= selectedUnit.movepoints && prevTile.unit.canMove) { // replace with actual distance function later
           this.map.moveEntity(selectedUnit, x, y);
         }
       }
@@ -103,7 +110,7 @@ export class GameController {
     this.renderer.render(this.getState());
   }
 
-  private getState() {
+  public getState() {
     const state: IGameState = {
       map: this.map.getState(),
       factions: this.factions,

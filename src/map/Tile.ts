@@ -5,7 +5,7 @@ import type { IBuilding } from "../types/IBuilding";
 import type { IRestoreContext } from "../types/IRestoreContext";
 import { Entity } from "../entities/Entity";
 
-const terrainStats: TerrainStats = {
+export const terrainStats: TerrainStats = {
   road: { moveCost: 1, defenseBonus: 0 },
   grass: { moveCost: 1, defenseBonus: 1 },
   hill: { moveCost: 2, defenseBonus: 1 },

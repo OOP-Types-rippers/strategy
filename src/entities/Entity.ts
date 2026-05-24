@@ -17,7 +17,6 @@ export class Entity implements IEntity {
   faction: IFaction | null;
   unitTerrainStats: UnitTerrainStats;
   canAttack: boolean;
-  canMove: boolean;
 
   constructor() {
     this.price = 0;
@@ -30,10 +29,17 @@ export class Entity implements IEntity {
     this.posX = -1;
     this.posY = -1;
     this.hasMoved = false;
-    this.canMove = true;
-    this.canAttack = false;
+    this.canAttack = true;
     this.faction = null;
     this.unitTerrainStats = {}; // за замовчуванням юніт нічого не змінює
+  }
+
+  get canMove() {
+    return !this.hasMoved;
+  }
+
+  set canMove(can: boolean) {
+    this.hasMoved = !can;
   }
 
   get Hp(): number {
@@ -61,18 +67,18 @@ export class Entity implements IEntity {
     return this.attack;
   }
 
-    get PosX() {
-        return this.posX;
-    }
-    get PosY() {
-        return this.posY;
-    }
+  get PosX() {
+    return this.posX;
+  }
+  get PosY() {
+    return this.posY;
+  }
 
-    setPos(newPosX: number, newPosY: number): void{
-        this.posX = newPosX;
-        this.posY = newPosY;
-        return;
-    }
+  setPos(newPosX: number, newPosY: number): void {
+    this.posX = newPosX;
+    this.posY = newPosY;
+    return;
+  }
 
   setAttack(newAttack: number): void {
     this.attack = newAttack;
@@ -125,10 +131,11 @@ export class Entity implements IEntity {
   toAttack(unit: IEntity) {
     unit.takeDamage(this);
     this.canAttack = false;
+    this.hasMoved = true;
   }
 
   onTurn() {
-    this.canMove = true
+    this.hasMoved = false
     this.canAttack = true
   }
 

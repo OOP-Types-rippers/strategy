@@ -99,3 +99,12 @@ main {
   height: 144px;
   border-top: 1px solid black;
 }
+
+#end-turn-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}

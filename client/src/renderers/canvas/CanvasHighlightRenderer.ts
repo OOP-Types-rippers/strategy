@@ -1,3 +1,5 @@
+import { Entity } from "../../../../src/entities/Entity";
+import { GameMap } from "../../../../src/map/GameMap";
 import { IGameState } from "../../../../src/types/IGameState";
 import { IRenderer } from "../../../../src/types/IRenderer";
 import { ITileState } from "../../../../src/types/ITile";
@@ -39,7 +41,7 @@ export class CanvasHighlightRenderer implements IRenderer {
     const selectedUnit = selectedTile.unit;
     if (!selectedUnit) return;
 
-    const distances = this.calculateDistanceMap(state, selectedX, selectedY);
+    const distances = this.calculateDistanceMap(state);
 
     for (let y = 0; y < state.map.height; y++) {
       for (let x = 0; x < state.map.width; x++) {
@@ -54,9 +56,11 @@ export class CanvasHighlightRenderer implements IRenderer {
           this.drawMoveTile(x, y);
         }
 
+        const attackDistance = Math.abs(selectedX - x) + Math.abs(selectedY - y);
+
         if (
           selectedUnit.canAttack
-          && distance === 1
+          && attackDistance === 1
           && tile.unit
           && tile.unit.faction !== state.currentFaction
         ) {
@@ -66,67 +70,14 @@ export class CanvasHighlightRenderer implements IRenderer {
     }
   }
 
-  private calculateDistanceMap(
-    state: IGameState,
-    startX: number,
-    startY: number,
-  ): number[][] {
-    const distances = Array.from(
-      { length: state.map.height },
-      () => Array.from({ length: state.map.width }, () => Infinity),
-    );
+  private calculateDistanceMap(state: IGameState): number[][] {
+    const map = new GameMap(state.map.width, state.map.height);
+    map.restoreFromState(state.map, { factions: [] });
 
-    if (
-      startX < 0
-      || startY < 0
-      || startX >= state.map.width
-      || startY >= state.map.height
-    ) {
-      return distances;
-    }
+    const startX = state.selection!.x;
+    const startY = state.selection!.y;  
 
-    const queue: { x: number; y: number; cost: number }[] = [
-      { x: startX, y: startY, cost: 0 },
-    ];
-    distances[startY]![startX] = 0;
-
-    const directions = [
-      { dx: 1, dy: 0 },
-      { dx: -1, dy: 0 },
-      { dx: 0, dy: 1 },
-      { dx: 0, dy: -1 },
-    ];
-
-    while (queue.length > 0) {
-      queue.sort((a, b) => a.cost - b.cost);
-      const { x, y, cost } = queue.shift()!;
-
-      if (cost > distances[y]![x]!) continue;
-
-      for (const direction of directions) {
-        const nextX = x + direction.dx;
-        const nextY = y + direction.dy;
-
-        if (
-          nextX < 0
-          || nextY < 0
-          || nextX >= state.map.width
-          || nextY >= state.map.height
-        ) {
-          continue;
-        }
-
-        const nextTile = state.map.grid[nextY]?.[nextX];
-        if (!nextTile) continue;
-
-        const nextCost = cost + 1;
-        if (nextCost < distances[nextY]![nextX]!) {
-          distances[nextY]![nextX] = nextCost;
-          queue.push({ x: nextX, y: nextY, cost: nextCost });
-        }
-      }
-    }
-
+    const distances = map.grid.map((row, y) => row.map((tile, x) => map.getDistance(startX, startY, x, y)));
     return distances;
   }
 

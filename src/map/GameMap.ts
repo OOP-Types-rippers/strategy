@@ -86,6 +86,7 @@ export class GameMap implements IGameMap {
         fromTile.unit = null;
 
         entity.setPos(toX, toY);
+        entity.hasMoved = true;
     }
 
     placeBuilding(x: number, y: number, building: IBuilding): void {
@@ -152,7 +153,7 @@ export class GameMap implements IGameMap {
         return -1;
     }
 
-    getDistanceUnitTile(fromEntity: Entity, endX: number, endY: number): number {
+    getDistanceUnitTile(fromEntity: IEntity, endX: number, endY: number): number {
         const startX: number = fromEntity.PosX;
         const startY: number = fromEntity.PosY;
 

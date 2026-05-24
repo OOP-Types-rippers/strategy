@@ -48,6 +48,10 @@ export class CanvasRenderer implements IRenderer {
 
     public render(state: IGameState): void {
         this.lastState = state;
+        
+        const rect = this.canvas.getBoundingClientRect();
+        this.camera.clamp(rect.width, rect.height, state.map.width, state.map.height, this.tileSize);
+
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.context.save();

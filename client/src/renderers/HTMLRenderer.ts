@@ -5,7 +5,7 @@ import { InfoRenderer } from "./ui/InfoRenderer";
 import { StatusRenderer } from "./ui/StatusRenderer";
 
 export class HTMLRenderer implements IMasterRenderer {
-  private canvasRenderer: CanvasRenderer;
+  public canvasRenderer: CanvasRenderer;
   private infoRenderer: InfoRenderer;
   private statusRenderer: StatusRenderer;
 
