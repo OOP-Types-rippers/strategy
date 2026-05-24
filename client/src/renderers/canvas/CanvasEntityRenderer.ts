@@ -33,7 +33,7 @@ export class CanvasEntityRenderer implements IRenderer {
       this.drawUnit(entity, x, y);
       this.drawHealthBar(entity, x, y);
 
-      if (!entity.canMove || !entity.canAttack) {
+      if (!entity.canMove && !entity.canAttack) {
         this.drawExhaustedMarker(x, y);
       }
     }
