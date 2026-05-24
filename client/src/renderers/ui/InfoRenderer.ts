@@ -12,8 +12,6 @@ export class InfoRenderer implements IRenderer {
   constructor(
     private element: HTMLElement
   ) {
-    this.element.classList.add("info-rendered");
-
     this.title = document.createElement("div");
     this.title.className = "info-rendered-title";
 
