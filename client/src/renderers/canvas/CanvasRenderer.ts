@@ -61,12 +61,16 @@ export class CanvasRenderer implements IRenderer {
         this.highlightRenderer.render(state);
         this.entityRenderer.render(state);
 
+        const faction = state.factions.find((faction) => faction.name === state.currentFaction);
+        if (faction) {
+            const r = (faction.color >> 16) & 255;
+            const g = (faction.color >> 8) & 255;
+            const b = faction.color & 255;
+            const alpha = 0.05;
+            this.canvas.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
         this.context.restore();
-    }
-
-
-    public caption(faction: any, turn: number): void {
-        // TODO
     }
 
     public get camera(): Camera {
