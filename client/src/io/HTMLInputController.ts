@@ -10,6 +10,7 @@ export class HTMLInputController extends InputController {
   private boundHandleEndTurnClick: () => void;
 
   private boundHandleWheel: (event: WheelEvent) => void;
+  private boundHandleKeyDown: (event: KeyboardEvent) => void;
 
   constructor(gameController: GameController, renderer: HTMLRenderer) {
     super(gameController);
@@ -30,8 +31,48 @@ export class HTMLInputController extends InputController {
     this.boundHandleClick = this.handleClick.bind(this);
     this.boundHandleEndTurnClick = this.handleEndTurnClick.bind(this);
     this.boundHandleWheel = this.handleWheel.bind(this);
+    this.boundHandleKeyDown = this.handleKeyDown.bind(this);
 
     this.canvas.addEventListener("wheel", this.boundHandleWheel, { passive: false });
+    document.addEventListener("keydown", this.boundHandleKeyDown);
+  }
+
+  private handleKeyDown(event: KeyboardEvent) {
+    const camera = this.renderer.canvasRenderer.camera;
+    const moveAmount = 20; // pixels to move per keypress
+    let moveX = 0;
+    let moveY = 0;
+
+    switch (event.key.toLowerCase()) {
+      case 'w':
+        moveY = moveAmount;
+        break;
+      case 's':
+        moveY = -moveAmount;
+        break;
+      case 'a':
+        moveX = moveAmount;
+        break;
+      case 'd':
+        moveX = -moveAmount;
+        break;
+      default:
+        return; // do nothing for other keys
+    }
+
+    const moved = camera.move(
+      moveX,
+      moveY,
+      this.canvas.width,
+      this.canvas.height,
+      this.gameController.map.width,
+      this.gameController.map.height,
+      this.renderer.canvasRenderer.tileSize
+    );
+
+    if (moved) {
+      this.renderer.render(this.gameController.getState());
+    }
   }
 
   private handleWheel(event: WheelEvent) {
