@@ -78,7 +78,6 @@ export class CanvasHighlightRenderer implements IRenderer {
     const startY = state.selection!.y;  
 
     const distances = map.grid.map((row, y) => row.map((tile, x) => map.getDistance(startX, startY, x, y)));
-    console.log(distances)
     return distances;
   }
 
