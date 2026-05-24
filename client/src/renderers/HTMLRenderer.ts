@@ -35,6 +35,17 @@ export class HTMLRenderer implements IMasterRenderer {
   }
 
   public caption(winner: any | null, turns: number): void {
-    // TODO
+    const titleElement = document.querySelector<HTMLDivElement>(".win-title")
+    if (!titleElement) return;
+
+    let title: string;
+    if (winner) {
+      title = `${winner.name} won in ${turns} turns!`
+    } else {
+      title = "Draw!"
+    }
+
+    titleElement.textContent = title;
+    titleElement.style.display = "flex";
   }
 }
