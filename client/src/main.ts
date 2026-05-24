@@ -5,16 +5,15 @@ import { FactionsGenerator } from "../../src/factions/FactionsGenerator";
 import { HTMLInputController } from "./io/HTMLInputController";
 import { Soldier } from "../../src/entities/Entity";
 
-function createGame(mapSize: number, factionCount: number) {
-  const mapGenerator = new MapGenerator();
-  const map = mapGenerator.generateMap(mapSize, mapSize);
+function createGame(width: number, height: number, seed: number, factionCount: number) {
+  const mapGenerator = new MapGenerator(seed);
+  const map = mapGenerator.generateMap(width, height);
 
   const renderer = new HTMLRenderer();
 
   const factionsGenerator = new FactionsGenerator();
   const factions = factionsGenerator.generateFactions(factionCount);
 
-  
   const gameController = new GameController(map, factions, renderer);
 
   const inputController = new HTMLInputController(gameController, renderer);
@@ -35,7 +34,30 @@ function restoreState() {
   if (titleElement) {
     titleElement.style.display = "none";
   }
+
+  const canvasElement = document.querySelector<HTMLCanvasElement>("#map");
+  if (canvasElement) {
+    const newCanvas = canvasElement.cloneNode(true) as HTMLCanvasElement;
+    newCanvas.removeAttribute("width");
+    newCanvas.removeAttribute("height");
+    canvasElement.replaceWith(newCanvas);
+  }
 }
 
-const game = createGame(16, 2);
-game.start();
+const form = document.querySelector<HTMLFormElement>("#new-game-form")
+form?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  restoreState();
+
+  const formData = new FormData(form);
+  let width = parseInt(formData.get("width") as string) || 12;
+  width = Math.min(Math.max(width, 5), 20);
+  let height = parseInt(formData.get("height") as string) || 12;
+  height = Math.min(Math.max(height, 5), 20);
+  let factionsCount = parseInt(formData.get("players-amount") as string) || 2;
+  factionsCount = Math.min(Math.max(factionsCount, 2), 8);
+  const seed = parseInt(formData.get("map-seed") as string) || 42;
+
+  const newGame = createGame(width, height, seed, factionsCount);
+  newGame.start();
+});
