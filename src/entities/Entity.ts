@@ -122,14 +122,15 @@ export class Entity implements IEntity {
     }
   }
 
-  takeDamage(unit: IEntity) {
-    let baseDamage = unit.Attack - this.Defense;
-    let damage = baseDamage * unit.Hp / unit.MaxHp;
+  takeDamage(unit: IEntity, tileDefenseBonus: number = 0) {
+    const effectiveDefense = this.Defense + tileDefenseBonus;
+    const baseDamage = Math.max(0, unit.Attack - effectiveDefense);
+    const damage = baseDamage * unit.Hp / unit.MaxHp;
     this.decreaseHP(damage);
   }
 
-  toAttack(unit: IEntity) {
-    unit.takeDamage(this);
+  toAttack(unit: IEntity, tileDefenseBonus: number = 0) {
+    unit.takeDamage(this, tileDefenseBonus);
     this.canAttack = false;
     this.hasMoved = true;
   }

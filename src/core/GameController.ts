@@ -90,7 +90,7 @@ export class GameController {
           && selectedUnit.canAttack
           && attackDistance === 1
         ) {
-          selectedUnit.toAttack(targetTile.unit);
+          selectedUnit.toAttack(targetTile.unit, targetTile.defenseBonus);
           if (targetTile.unit.hp <= 0) this.map.removeEntity(x, y);
         } else if (!targetTile.unit && walkDistance <= selectedUnit.movepoints && prevTile.unit.canMove) { // replace with actual distance function later
           this.map.moveEntity(selectedUnit, x, y);
