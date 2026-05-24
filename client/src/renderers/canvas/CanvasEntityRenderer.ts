@@ -33,7 +33,7 @@ export class CanvasEntityRenderer implements IRenderer {
       this.drawUnit(entity, x, y);
       this.drawHealthBar(entity, x, y);
 
-      if (!entity.canMove && !entity.canAttack) {
+      if (!entity.canMove || !entity.canAttack) {
         this.drawExhaustedMarker(x, y);
       }
     }
@@ -93,7 +93,7 @@ export class CanvasEntityRenderer implements IRenderer {
     this._context.stroke();
 
     this._context.fillStyle = "#FFFFFF";
-    this._context.font = "bold 14px Arial";
+    this._context.font = `bold ${Math.max(16, this._tileSize * 0.35)}px Arial`;
     this._context.textAlign = "center";
     this._context.textBaseline = "middle";
     this._context.fillText(entity.id.charAt(0).toUpperCase(), cx, cy);
@@ -103,19 +103,18 @@ export class CanvasEntityRenderer implements IRenderer {
     const pxX = gridX * this._tileSize;
     const pxY = gridY * this._tileSize;
 
-    const barW = this._tileSize * 0.8;
-    const barH = 5;
-    const startX = pxX + (this._tileSize - barW) / 2;
-    const startY = pxY + 2;
-    const healthPct = Math.max(0, entity.hp / entity.maxHp);
+    const text = `${entity.hp}/${entity.maxHp}`;
+    const fontSize = Math.max(10, this._tileSize * 0.15);
 
-    this._context.fillStyle = "#FF0000";
-    this._context.fillRect(startX, startY, barW, barH);
-    this._context.fillStyle = "#00FF00";
-    this._context.fillRect(startX, startY, barW * healthPct, barH);
-    this._context.strokeStyle = "#000000";
-    this._context.lineWidth = 1;
-    this._context.strokeRect(startX, startY, barW, barH);
+    this._context.font = `bold ${fontSize}px Arial`;
+    this._context.textAlign = "center";
+    this._context.textBaseline = "top";
+
+    this._context.fillStyle = "rgba(0, 0, 0, 0.5)";
+    this._context.fillText(text, pxX + this._tileSize / 2 + 1, pxY + 3);
+
+    this._context.fillStyle = "#FFFFFF";
+    this._context.fillText(text, pxX + this._tileSize / 2, pxY + 2);
   }
 
   private drawExhaustedMarker(gridX: number, gridY: number): void {
@@ -151,3 +150,4 @@ export class CanvasEntityRenderer implements IRenderer {
     this._onImageLoad = cb;
   }
 }
+
