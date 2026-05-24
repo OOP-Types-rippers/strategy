@@ -55,7 +55,7 @@ form?.addEventListener("submit", (event) => {
   width = Math.min(Math.max(width, 5), 64);
   let height = parseInt(formData.get("height") as string) || 16;
   height = Math.min(Math.max(height, 5), 64);
-  let factionsCount = parseInt(formData.get("factions") as string) || 2;
+  let factionsCount = parseInt(formData.get("players-amount") as string) || 2;
   factionsCount = Math.min(Math.max(factionsCount, 2), 8);
 
   const newGame = createGame(width, height, factionsCount);
