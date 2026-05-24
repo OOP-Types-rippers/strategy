@@ -5,9 +5,9 @@ import { FactionsGenerator } from "../../src/factions/FactionsGenerator";
 import { HTMLInputController } from "./io/HTMLInputController";
 import { Soldier } from "../../src/entities/Entity";
 
-function createGame(mapSize: number, factionCount: number) {
+function createGame(width: number, height: number, factionCount: number) {
   const mapGenerator = new MapGenerator();
-  const map = mapGenerator.generateMap(mapSize, mapSize);
+  const map = mapGenerator.generateMap(width, height);
 
   const renderer = new HTMLRenderer();
 
@@ -37,5 +37,19 @@ function restoreState() {
   }
 }
 
-const game = createGame(16, 2);
-game.start();
+const form = document.querySelector<HTMLFormElement>("#new-game-form")
+form?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  restoreState();
+
+  const formData = new FormData(form);
+  let width = parseInt(formData.get("width") as string) || 16;
+  width = Math.min(Math.max(width, 5), 64);
+  let height = parseInt(formData.get("height") as string) || 16;
+  height = Math.min(Math.max(height, 5), 64);
+  let factionsCount = parseInt(formData.get("factions") as string) || 2;
+  factionsCount = Math.min(Math.max(factionsCount, 2), 8);
+
+  const newGame = createGame(width, height, factionsCount);
+  newGame.start();
+});

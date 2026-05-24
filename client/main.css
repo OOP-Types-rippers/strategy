@@ -33,10 +33,32 @@ main {
   align-items: center;
 }
 
-#end-turn-btn {
+#new-game-form {
+  display: flex;
+  gap: 8px;
+}
+
+.new-game-map-size {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  color: white;
+}
+
+#players-amount {
+  width: 120px
+}
+
+#new-game-btn, #end-turn-btn {
   padding: 4px 8px;
   font-size: 12px;
   cursor: pointer;
+}
+
+#end-turn-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #status {

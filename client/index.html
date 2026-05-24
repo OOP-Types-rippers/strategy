@@ -10,6 +10,17 @@
 <body>
   <main>
     <div id="control">
+      <div class="new-game-container">
+        <form id="new-game-form">
+          <input placeholder="Players amount" id="players-amount" type="number" min="2" max="8">
+          <div class="new-game-map-size">
+            <input name="width" placeholder="w" type="number" min="5" max="64">
+            x
+            <input name="height" placeholder="h" type="number" min="5" max="64">
+          </div>
+          <button id="new-game-btn" type="submit">New Game</button>
+        </form>
+      </div>
       <button id="end-turn-btn" disabled>End Turn</button>
     </div>
     <div id="status"></div>
