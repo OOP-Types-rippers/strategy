@@ -15,7 +15,14 @@ export class CanvasEntityRenderer implements IRenderer {
   public render(state: IGameState): void {
     const { map } = state;
 
-    
+    const factionColors = new Map<string, string>();
+    for (const faction of state.factions) {
+      const r = (faction.color >> 16) & 255;
+      const g = (faction.color >> 8) & 255;
+      const b = faction.color & 255;
+      factionColors.set(faction.name, `rgb(${r}, ${g}, ${b})`);
+    }
+
     const units: Array<{ entity: IEntityState; x: number; y: number }> = [];
 
     for (let y = 0; y < map.height; y++) {
@@ -30,7 +37,7 @@ export class CanvasEntityRenderer implements IRenderer {
     units.sort((a, b) => a.y - b.y);
 
     for (const { entity, x, y } of units) {
-      this.drawUnit(entity, x, y);
+      this.drawUnit(entity, x, y, factionColors);
       this.drawHealthBar(entity, x, y);
 
       if (!entity.canMove && !entity.canAttack) {
@@ -39,13 +46,13 @@ export class CanvasEntityRenderer implements IRenderer {
     }
   }
 
-  private drawUnit(entity: IEntityState, gridX: number, gridY: number): void {
+  private drawUnit(entity: IEntityState, gridX: number, gridY: number, factionColors: Map<string, string>): void {
     const pxX = gridX * this._tileSize;
     const pxY = gridY * this._tileSize;
     const spritePath = UnitSpriteMapper.getSprite(entity.id);
 
     if (!this.drawSpriteImage(spritePath, pxX, pxY)) {
-      this.drawFallback(entity, pxX, pxY);
+      this.drawFallback(entity, pxX, pxY, factionColors);
     }
   }
 
@@ -79,14 +86,14 @@ export class CanvasEntityRenderer implements IRenderer {
     }
   }
 
-  private drawFallback(entity: IEntityState, pxX: number, pxY: number): void {
+  private drawFallback(entity: IEntityState, pxX: number, pxY: number, factionColors: Map<string, string>): void {
     const cx = pxX + this._tileSize / 2;
     const cy = pxY + this._tileSize / 2;
     const r = this._tileSize * 0.35;
 
     this._context.beginPath();
     this._context.arc(cx, cy, r, 0, Math.PI * 2);
-    this._context.fillStyle = this.getFactionColor(entity.faction);
+    this._context.fillStyle = factionColors.get(entity.faction ?? "") ?? "#9E9E9E";
     this._context.fill();
     this._context.lineWidth = 2;
     this._context.strokeStyle = "#000000";
@@ -127,18 +134,7 @@ export class CanvasEntityRenderer implements IRenderer {
     this._context.fill();
   }
 
-  private getFactionColor(faction: string | null): string {
-    const colors: Record<string, string> = {
-      Red: "#D32F2F",
-      Blue: "#1976D2",
-      Green: "#388E3C",
-      Yellow: "#FBC02D",
-      Purple: "#7B1FA2",
-    };
-    return colors[faction ?? ""] ?? "#9E9E9E";
-  }
-
-  public set tileSize(tileSize: number) {
+public set tileSize(tileSize: number) {
     this._tileSize = tileSize;
   }
 
