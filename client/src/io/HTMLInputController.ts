@@ -38,8 +38,15 @@ export class HTMLInputController extends InputController {
     event.preventDefault();
 
     const camera = this.renderer.canvasRenderer.camera;
-    const zoomFactor = 1.5;
+    const rect = this.canvas.getBoundingClientRect();
+    const screenX = event.clientX - rect.left;
+    const screenY = event.clientY - rect.top;
+
+    const zoomFactor = 1.1;
     const newZoom = event.deltaY < 0 ? camera.zoom * zoomFactor : camera.zoom / zoomFactor;
+
+    const worldX = (screenX - camera.offsetX) / camera.zoom;
+    const worldY = (screenY - camera.offsetY) / camera.zoom;
 
     const zoomChanged = camera.setZoom(
       newZoom,
@@ -51,6 +58,19 @@ export class HTMLInputController extends InputController {
     );
 
     if (zoomChanged) {
+      const newOffsetX = screenX - worldX * camera.zoom;
+      const newOffsetY = screenY - worldY * camera.zoom;
+
+      camera.move(
+        newOffsetX - camera.offsetX,
+        newOffsetY - camera.offsetY,
+        this.canvas.width,
+        this.canvas.height,
+        this.gameController.map.width,
+        this.gameController.map.height,
+        this.renderer.canvasRenderer.tileSize
+      );
+
       this.renderer.render(this.gameController.getState());
     }
   }
