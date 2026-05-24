@@ -124,7 +124,7 @@ export class Entity implements IEntity {
 
   takeDamage(unit: IEntity, tileDefenseBonus: number = 0) {
     const effectiveDefense = this.Defense + tileDefenseBonus;
-    const baseDamage = Math.max(0, unit.Attack * (10 - effectiveDefense) / 10) * (unit.Hp / unit.MaxHp);
+    const baseDamage = unit.Attack * (10 - effectiveDefense) / 10;
     const damage = Math.max(0.1, baseDamage * unit.Hp / unit.MaxHp);
     this.decreaseHP(damage);
   }
