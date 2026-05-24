@@ -30,5 +30,12 @@ function createGame(mapSize: number, factionCount: number) {
   return gameController;
 }
 
+function restoreState() {
+  const titleElement = document.querySelector<HTMLDivElement>(".win-title");
+  if (titleElement) {
+    titleElement.style.display = "none";
+  }
+}
+
 const game = createGame(16, 2);
 game.start();
