@@ -81,17 +81,18 @@ export class GameController {
       const prevTile = this.map.getTile(this.selectedTile.x, this.selectedTile.y);
       if (prevTile.unit && prevTile.unit.faction === this.currentFaction) {
         const selectedUnit = prevTile.unit;
-        const distance = Math.abs(selectedUnit.posX - x) + Math.abs(selectedUnit.posY - y);
+        const walkDistance = this.map.getDistanceUnitTile(selectedUnit, x, y);
+        const attackDistance = Math.abs(selectedUnit.posX - x) + Math.abs(selectedUnit.posY - y);
   
         if (
           targetTile.unit
           && targetTile.unit.faction !== this.currentFaction
           && selectedUnit.canAttack
-          && distance === 1
+          && attackDistance === 1
         ) {
           selectedUnit.toAttack(targetTile.unit);
           if (targetTile.unit.hp <= 0) this.map.removeEntity(x, y);
-        } else if (!targetTile.unit && distance <= selectedUnit.movepoints) { // replace with actual distance function later
+        } else if (!targetTile.unit && walkDistance <= selectedUnit.movepoints && prevTile.unit.canMove) { // replace with actual distance function later
           this.map.moveEntity(selectedUnit, x, y);
         }
       }

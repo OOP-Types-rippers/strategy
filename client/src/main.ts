@@ -3,6 +3,7 @@ import { HTMLRenderer } from "./renderers/HTMLRenderer";
 import { MapGenerator } from "../../src/map/MapGenerator";
 import { FactionsGenerator } from "../../src/factions/FactionsGenerator";
 import { HTMLInputController } from "./io/HTMLInputController";
+import { Soldier } from "../../src/entities/Entity";
 
 function createGame(mapSize: number, factionCount: number) {
   const mapGenerator = new MapGenerator();
@@ -17,8 +18,13 @@ function createGame(mapSize: number, factionCount: number) {
   const gameController = new GameController(map, factions, renderer);
 
   const inputController = new HTMLInputController(gameController, renderer);
-  for (const faction of factions) {
+  for (let i = 0; i < factions.length; i++) {
+    const faction = factions[i]!
     gameController.registerController(faction, inputController);
+
+    const soldier = new Soldier();
+    soldier.faction = faction;
+    map.placeEntity(i, i, soldier);
   }
 
   return gameController;
