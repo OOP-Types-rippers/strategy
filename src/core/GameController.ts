@@ -37,10 +37,20 @@ export class GameController {
   public async nextTurn() {
     if (this.checkWinCondition()) return;
 
-    this.turn++;
-    this.currentFaction = this.factions[(this.turn - 1) % this.factions.length]!;
+    const aliveFactions = new Set<IFaction>();
+    this.map.grid.forEach(row => row.forEach(tile => {
+      if (tile.unit?.faction) aliveFactions.add(tile.unit.faction);
+    }));
 
-    this.map.grid.forEach(row => row.forEach(tile => tile.unit?.onTurn()));
+    this.factions = this.factions.filter(faction => aliveFactions.has(faction));
+    const currentFactionIndex = this.factions.findIndex(faction => faction.name === this.currentFaction.name);
+    this.currentFaction = this.factions[(currentFactionIndex + 1) % this.factions.length]!;
+
+    this.turn++;
+    this.map.grid.forEach(row => row.forEach(tile => {
+      const unit = tile.unit;
+      if (unit && unit.faction === this.currentFaction) unit.onTurn();
+    }));
     this.render();
 
     const activeController = this.controllers.get(this.currentFaction);
