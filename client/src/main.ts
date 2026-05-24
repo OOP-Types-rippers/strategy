@@ -50,10 +50,10 @@ form?.addEventListener("submit", (event) => {
   restoreState();
 
   const formData = new FormData(form);
-  let width = parseInt(formData.get("width") as string) || 16;
-  width = Math.min(Math.max(width, 5), 64);
-  let height = parseInt(formData.get("height") as string) || 16;
-  height = Math.min(Math.max(height, 5), 64);
+  let width = parseInt(formData.get("width") as string) || 12;
+  width = Math.min(Math.max(width, 5), 20);
+  let height = parseInt(formData.get("height") as string) || 12;
+  height = Math.min(Math.max(height, 5), 20);
   let factionsCount = parseInt(formData.get("players-amount") as string) || 2;
   factionsCount = Math.min(Math.max(factionsCount, 2), 8);
   const seed = parseInt(formData.get("map-seed") as string) || 42;
