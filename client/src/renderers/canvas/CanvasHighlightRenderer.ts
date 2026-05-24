@@ -41,7 +41,7 @@ export class CanvasHighlightRenderer implements IRenderer {
     const selectedUnit = selectedTile.unit;
     if (!selectedUnit) return;
 
-    const distances = this.calculateDistanceMap(state, selectedX, selectedY);
+    const distances = this.calculateDistanceMap(state);
 
     for (let y = 0; y < state.map.height; y++) {
       for (let x = 0; x < state.map.width; x++) {

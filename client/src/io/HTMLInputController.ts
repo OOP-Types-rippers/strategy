@@ -9,6 +9,8 @@ export class HTMLInputController extends InputController {
   private boundHandleClick: (event: MouseEvent) => void;
   private boundHandleEndTurnClick: () => void;
 
+  private boundHandleWheel: (event: WheelEvent) => void;
+
   constructor(gameController: GameController, renderer: HTMLRenderer) {
     super(gameController);
     this.renderer = renderer;
@@ -27,6 +29,30 @@ export class HTMLInputController extends InputController {
 
     this.boundHandleClick = this.handleClick.bind(this);
     this.boundHandleEndTurnClick = this.handleEndTurnClick.bind(this);
+    this.boundHandleWheel = this.handleWheel.bind(this);
+
+    this.canvas.addEventListener("wheel", this.boundHandleWheel, { passive: false });
+  }
+
+  private handleWheel(event: WheelEvent) {
+    event.preventDefault();
+
+    const camera = this.renderer.canvasRenderer.camera;
+    const zoomFactor = 1.5;
+    const newZoom = event.deltaY < 0 ? camera.zoom * zoomFactor : camera.zoom / zoomFactor;
+
+    const zoomChanged = camera.setZoom(
+      newZoom,
+      this.canvas.width,
+      this.canvas.height,
+      this.gameController.map.width,
+      this.gameController.map.height,
+      this.renderer.canvasRenderer.tileSize
+    );
+
+    if (zoomChanged) {
+      this.renderer.render(this.gameController.getState());
+    }
   }
 
   private handleEndTurnClick() {

@@ -110,7 +110,7 @@ export class GameController {
     this.renderer.render(this.getState());
   }
 
-  private getState() {
+  public getState() {
     const state: IGameState = {
       map: this.map.getState(),
       factions: this.factions,
