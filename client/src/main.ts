@@ -35,6 +35,14 @@ function restoreState() {
   if (titleElement) {
     titleElement.style.display = "none";
   }
+
+  const canvasElement = document.querySelector<HTMLCanvasElement>("#map");
+  if (canvasElement) {
+    const newCanvas = canvasElement.cloneNode(true) as HTMLCanvasElement;
+    newCanvas.removeAttribute("width");
+    newCanvas.removeAttribute("height");
+    canvasElement.replaceWith(newCanvas);
+  }
 }
 
 const form = document.querySelector<HTMLFormElement>("#new-game-form")
