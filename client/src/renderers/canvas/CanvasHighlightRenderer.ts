@@ -56,9 +56,11 @@ export class CanvasHighlightRenderer implements IRenderer {
           this.drawMoveTile(x, y);
         }
 
+        const attackDistance = Math.abs(selectedX - x) + Math.abs(selectedY - y);
+
         if (
           selectedUnit.canAttack
-          && distance === 1
+          && attackDistance === 1
           && tile.unit
           && tile.unit.faction !== state.currentFaction
         ) {
