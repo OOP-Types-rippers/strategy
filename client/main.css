@@ -22,9 +22,70 @@ main {
 }
 
 #status {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 6px 14px;
   width: 100%;
   height: 48px;
   border-bottom: 1px solid black;
+  white-space: nowrap;
+}
+
+.status-rendered-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 92px;
+}
+
+.status-rendered-label {
+  color: #303030;
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.status-rendered-value {
+  color: #111111;
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.status-rendered-factions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.status-rendered-faction {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 13px;
+}
+
+.status-rendered-faction-active {
+  font-weight: bold;
+}
+
+.status-rendered-swatch {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  border: 1px solid black;
+  border-radius: 50%;
+}
+
+.status-rendered-money {
+  color: #303030;
 }
 
 #map {
