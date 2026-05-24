@@ -55,8 +55,8 @@ export interface IEntity {
   setPos(newPosX: number, newPosY: number): void
   increaseHP(bonus: number): void
   decreaseHP(bonus: number): void
-  toAttack(unit: IEntity): void
-  takeDamage(unit: IEntity): void
+  toAttack(unit: IEntity, tileDefenseBonus?: number): void
+  takeDamage(unit: IEntity, tileDefenseBonus?: number): void
   onTurn(): void
   restoreFromState(entityState: IEntityState, context: IRestoreContext): void
   getState(): IEntityState
