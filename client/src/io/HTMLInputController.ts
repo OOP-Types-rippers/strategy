@@ -39,7 +39,7 @@ export class HTMLInputController extends InputController {
 
   private handleKeyDown(event: KeyboardEvent) {
     const camera = this.renderer.canvasRenderer.camera;
-    const moveAmount = 20; // pixels to move per keypress
+    const moveAmount = 20 * camera.zoom; // pixels to move per keypress
     let moveX = 0;
     let moveY = 0;
 
